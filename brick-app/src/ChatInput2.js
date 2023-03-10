@@ -61,7 +61,7 @@ function ChatInput() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const url = "https://api.openai.com/v1/engines/davinci-codex/completions";
+    const url = "https://api.openai.com/v1/chat/completions";
     const prompt = message;
     const maxTokens = 60;
     const apiKey = process.env.REACT_APP_CHATGPT_API_KEY; // Replace with your API key

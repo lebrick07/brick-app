@@ -8,7 +8,7 @@ import './styles.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <h1>Brick App</h1>
+    <h1>Magic Brick</h1>
     <h2>Ask me anything...</h2>
     <App />
   </React.StrictMode>
