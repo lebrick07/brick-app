@@ -25,12 +25,14 @@
 // export default App;
 
 import ChatInput from './ChatInput';
+import ChatInput2 from './ChatInput2';
 import React from 'react';
 
 function App() {
   return (
     <div className="App">
       <ChatInput />
+      <ChatInput2 />
     </div>
   );
 }
