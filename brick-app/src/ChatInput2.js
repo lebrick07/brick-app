@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function ChatGPT() {
+function ChatInput2() {
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
 
@@ -50,4 +50,4 @@ function ChatGPT() {
   );
 }
 
-export default ChatGPT;
+export default ChatInput2;
