@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function ChatInput2() {
+function ChatInput() {
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
   const [error, setError] = useState("");
@@ -57,9 +57,9 @@ function ChatInput2() {
         <button type="submit">Send</button>
       </form>
       {error && <p>Error: {error}</p>}
-      {response && <p>Response: {response}</p>}
+      {response && <p className="response-box">{response}</p>}
     </div>
   );
 }
 
-export default ChatInput2;
+export default ChatInput;
