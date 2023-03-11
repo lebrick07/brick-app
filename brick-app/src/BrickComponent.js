@@ -47,7 +47,6 @@ function ChatInput() {
     <div>
       <form onSubmit={handleSubmit}>
         <label>
-          Message:
           <input
             type="text"
             value={message}
