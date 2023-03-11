@@ -15,8 +15,6 @@ spec:
       containers:
         - name: brick-app
           image: localhost:5000/brick-app
-#          image: idanbenyair/atrium-react:latest
-          # image: atrium-react:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 31001
