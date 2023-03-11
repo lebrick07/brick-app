@@ -66,15 +66,16 @@ function ChatInput2() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const encodedURL = encodeURIComponent(
-        process.env.REACT_APP_OPENAI_URL
-    );
+    // const encodedURL = encodeURIComponent(
+    //     process.env.REACT_APP_OPENAI_URL
+    // );
     const prompt = message;
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-    const orgName = process.env.REACT_APP_OPENAI_ORG_NAME;
+    // const orgName = process.env.REACT_APP_OPENAI_ORG_NAME;
     const modelName = process.env.REACT_APP_OPENAI_MODEL;
     // const apiUrl = `https://api.openai.com/organizations/${orgName}/models/${modelName}/completions`;
-    const apiUrl = encodedURL;
+    const apiUrl = process.env.REACT_APP_OPENAI_URL;
+    // const apiUrl = encodedURL;
     const requestOptions = {
       method: "POST",
       headers: {
@@ -87,7 +88,7 @@ function ChatInput2() {
         temperature: 0.5,
         max_tokens: 100,
         model: modelName,
-        organization: orgName,
+        // organization: orgName,
       }),
     };
 
