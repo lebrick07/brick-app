@@ -67,15 +67,14 @@ function ChatInput2() {
     event.preventDefault();
 
     const encodedURL = encodeURIComponent(
-      "https://api.openai.com/v1/completions"
+        process.env.REACT_APP_OPENAI_URL
     );
     const prompt = message;
-    const apiKey = process.env.REACT_APP_CHATGPT_API_KEY;
-    const orgName = "org-QaKnT7UlYFf5r5uHNFophP3W";
-    const modelName = "text-davinci-002";
+    const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+    const orgName = process.env.REACT_APP_OPENAI_ORG_NAME;
+    const modelName = process.env.REACT_APP_OPENAI_MODEL;
     // const apiUrl = `https://api.openai.com/organizations/${orgName}/models/${modelName}/completions`;
     const apiUrl = encodedURL;
-    // const org    = process.dev.REACT_APP_ORG_NAME;
     const requestOptions = {
       method: "POST",
       headers: {
