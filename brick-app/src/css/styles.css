@@ -85,4 +85,28 @@ body {
   height: 300px;
   overflow: auto;
 }
+
+.chat-history-container {
+  position: relative;
+  margin-top: 20px;
+}
+
+.toggle-history-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.chat-history {
+  overflow: auto;
+  border: 1px solid rgb(223, 147, 147);
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #afcec2;
+  font-size: 18px;
+  line-height: 1.5;
+  width: 50%;
+  margin: auto;
+}
   
