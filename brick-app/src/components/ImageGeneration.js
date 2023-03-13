@@ -48,7 +48,7 @@ const ImageGeneration = () => {
         {loading ? "Generating Image..." : "Generate Image"}
       </button>
       <br></br>
-      {generatedImage && <img src={generatedImage} alt="Generated" />}
+      {generatedImage && <img src={generatedImage} alt="Generated" crossorigin="anonymous"/>}
     </div>
   );
 };
