@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Button } from 'react-bootstrap';
+import openai from "openai";
 
 const ImageGeneration = ({ conversation }) => {
   const [imageURL, setImageURL] = useState(null);
@@ -23,29 +23,23 @@ const ImageGeneration = ({ conversation }) => {
 
   const generateImage = async () => {
     setIsLoading(true);
-
+  
     try {
-      const response = await axios.post('https://api.openai.com/v1/images/generations', {
+      const response = await openai.createImageVariation({
         model: 'image-alpha-001',
         prompt: conversation,
-        n: 1,
         size: '512x512',
-        response_format: 'url'
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
-        }
+        n: 1,
       });
-
-      setImageURL(response.data.data[0].url);
+  
+      setImageURL(response.output[0].data.url);
     } catch (error) {
       console.log(error);
     }
-
+  
     setIsLoading(false);
   }
-
+  
   return (
     <div>
       {timeRemaining > 0 &&
@@ -65,3 +59,4 @@ const ImageGeneration = ({ conversation }) => {
 }
 
 export default ImageGeneration;
+
