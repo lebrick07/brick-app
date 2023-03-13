@@ -47,6 +47,7 @@ const ImageGeneration = () => {
       <button onClick={generateImage} disabled={loading}>
         {loading ? "Generating Image..." : "Generate Image"}
       </button>
+      <br></br>
       {generatedImage && <img src={generatedImage} alt="Generated" />}
     </div>
   );
