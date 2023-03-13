@@ -15,7 +15,7 @@
 
 import React, { useState } from 'react';
 import ChatInput from './ChatInput';
-import ImageGeneration from './ImageGenerator';
+import ImageGeneration from './ImageGeneration';
 import './css/App.css';
 
 function App() {
