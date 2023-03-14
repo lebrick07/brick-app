@@ -21,7 +21,7 @@ const ImageGeneration = () => {
         {
           model: "image-alpha-001",
           prompt: prompt,
-          size: "1024x1024",
+          size: "512x512",
           n: 1,
         },
         {
@@ -44,6 +44,7 @@ const ImageGeneration = () => {
 
   return (
     <div>
+      <h2>Wanna see a cool image?</h2>
       <label>
         <input
           type="text"
@@ -56,7 +57,7 @@ const ImageGeneration = () => {
         {loading ? "Generating Image..." : "Generate Image"}
       </button>
       <br />
-      {generatedImage && <img src={generatedImage} alt="Generated" />}
+      {generatedImage && <img src={generatedImage} alt="Generated" className="generated-image" />}
     </div>
   );
 };

@@ -17,6 +17,9 @@ import React, { useState } from 'react';
 import ChatInput from './components/ChatInput';
 import ImageGeneration from './components/ImageGeneration';
 import './css/App.css';
+import './css/ImageGeneration.css';
+import './css/Chat.css';
+
 
 function App() {
   const [conversationHistory, setConversationHistory] = useState([]);
@@ -28,8 +31,6 @@ function App() {
   return (
     <div className="App">
       <ChatInput onNewMessage={handleNewMessage} />
-      <br></br>
-      <br></br>
       <br></br>
       <br></br>
       <ImageGeneration conversationHistory={conversationHistory} />

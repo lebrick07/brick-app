@@ -26,4 +26,8 @@
     color: red;
     margin-top: 20px;
   }
-  
+
+  .generated-image {
+    border: 1px solid black;
+    border-style: double;
+  }
