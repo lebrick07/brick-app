@@ -44,7 +44,6 @@ const ImageGeneration = () => {
 
   return (
     <div>
-      <h2>Wanna see a cool image?</h2>
       <label>
         <input
           type="text"

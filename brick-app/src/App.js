@@ -13,8 +13,9 @@
 
 // // export default App
 
-import React, { useState } from 'react';
-import ChatInput from './components/ChatInput';
+// import React, { useState } from 'react';
+import React from 'react';
+// import ChatInput from './components/ChatInput';
 import ImageGeneration from './components/ImageGeneration';
 import './css/App.css';
 import './css/ImageGeneration.css';
@@ -22,18 +23,19 @@ import './css/Chat.css';
 
 
 function App() {
-  const [conversationHistory, setConversationHistory] = useState([]);
+  // const [conversationHistory, setConversationHistory] = useState([]);
 
-  const handleNewMessage = (newMessage) => {
-    setConversationHistory([...conversationHistory, newMessage]);
-  };
+  // const handleNewMessage = (newMessage) => {
+  //   setConversationHistory([...conversationHistory, newMessage]);
+  // };
 
   return (
     <div className="App">
-      <ChatInput onNewMessage={handleNewMessage} />
+      {/* <ChatInput onNewMessage={handleNewMessage} /> */}
       <br></br>
       <br></br>
-      <ImageGeneration conversationHistory={conversationHistory} />
+      {/* <ImageGeneration conversationHistory={conversationHistory} /> */}
+      <ImageGeneration />
     </div>
   );
 }

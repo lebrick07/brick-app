@@ -9,7 +9,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <h1>Magic Brick</h1>
-    <h2>Ask me anything...</h2>
+    {/* <h2>Ask me anything...</h2> */}
+    <h2>Wanna see a cool image?</h2>
     <App />
   </React.StrictMode>
 );
