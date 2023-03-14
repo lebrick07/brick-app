@@ -28,6 +28,10 @@ function App() {
   return (
     <div className="App">
       <ChatInput onNewMessage={handleNewMessage} />
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
       <ImageGeneration conversationHistory={conversationHistory} />
     </div>
   );
