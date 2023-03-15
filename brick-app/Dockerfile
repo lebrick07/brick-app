@@ -18,7 +18,7 @@ COPY . .
 
 CMD ["npm", "start"]
 
-EXPOSE 31001
+EXPOSE 8080
 
 # WORKDIR /usr/share/nginx/html
 # # Remove default nginx static assets
