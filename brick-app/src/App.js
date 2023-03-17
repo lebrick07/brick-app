@@ -17,6 +17,7 @@ import React, { useState } from 'react';
 // import React from 'react';
 import ChatInput from './components/ChatInput';
 import ImageGeneration from './components/ImageGeneration';
+// import Donations from './components/Donations';
 import './css/App.css';
 import './css/ImageGeneration.css';
 import './css/Chat.css';
@@ -38,6 +39,9 @@ function App() {
       <h2>Wanna see a cool image?</h2>
       {/* <ImageGeneration conversationHistory={conversationHistory} /> */}
       <ImageGeneration />
+
+      {/* <Donations /> */}
+
     </div>
   );
 }

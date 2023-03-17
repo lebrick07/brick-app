@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: brick-app
-          image: localhost:5000/brick-app
+          image: localhost:5000/brick-app-all
           imagePullPolicy: Always
           ports:
             - containerPort: 80
