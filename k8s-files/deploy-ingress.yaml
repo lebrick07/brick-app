@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: brick-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  rules:
+    - host: brick.autometalabs.io
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: brick-service
+              servicePort: 80
+  # tls:
+  #   - hosts:
+  #     - brick.autometalabs.io
