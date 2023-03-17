@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './css/styles.css';
 import './css/Navbar.css';
+// import About from './components/pages/About';
+// import Contact from './components/pages/Contact';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,9 +15,9 @@ root.render(
       <div class="container">
         {/* <a class="navbar-brand" href="#">ChatBot</a> */}
         <div class="navbar-nav">
-          <a class="nav-link" href="index.js">Home</a>
-          <a class="nav-link" href="pages/About.js">About</a>
-          <a class="nav-link" href="pages/Contact.js">Contact</a>
+          <a class="nav-link" href="index">Home</a>
+          <a class="nav-link" href="About">About</a>
+          <a class="nav-link" href="Contact">Contact</a>
         </div>
       </div>
     </nav>

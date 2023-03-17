@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: brick-app
-          image: localhost:5000/brick-app-all
+          image: zanylizard/brick-app-all
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -31,7 +31,7 @@ spec:
   ports:
     - port: 80
       targetPort: 80
-      protocol: TCP
       nodePort: 31001
+      protocol: TCP
   selector:
     app: brick-app
