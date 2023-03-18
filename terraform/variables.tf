@@ -34,6 +34,11 @@ variable "hosted_zone_name" {
     description = "Hosted zone name"
 }
 
+variable "dns_name" {
+    default = "brick.autometalabs.io"
+    description = "DNS name"
+}
+
 variable "lb_name" {
     default = "brick-lb"
     description = "ALB name"

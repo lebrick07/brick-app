@@ -81,9 +81,7 @@ resource "aws_eip" "brick_eip" {
 resource "aws_lb" "brick_lb" {
   name = var.lb_name
   internal = false
-  load_balancer_type = "application"
-  
-  security_groups = [aws_security_group.allow_ssh.id]
+  load_balancer_type = "network"
   subnets = [var.subnet_1, var.subnet_2]
   
   tags = {
@@ -94,7 +92,7 @@ resource "aws_lb" "brick_lb" {
 resource "aws_lb_listener" "brick_lb_listener" {
   load_balancer_arn = aws_lb.brick_lb.arn
   port = 80
-  protocol = "HTTP"
+  protocol = "TCP"
   
   default_action {
     type = "forward"
@@ -106,14 +104,14 @@ resource "aws_lb_target_group" "brick_tg" {
   name_prefix = "brk"
   
   target_type = "instance"
-  port = 80
-  protocol = "HTTP"
+  port = 31001
+  protocol = "TCP"
   
   vpc_id = var.vpc_id
   
   health_check {
-    path = "/"
-    protocol = "HTTP"
+    protocol = "TCP"
+    port = 31001
   }
   
   tags = {
@@ -134,7 +132,7 @@ data "aws_route53_zone" "brick_r53_zone" {
 
 resource "aws_route53_record" "brick_r53_record" {
   zone_id = data.aws_route53_zone.brick_r53_zone.zone_id
-  name = var.hosted_zone_name
+  name = var.dns_name
   type = "A"
   alias {
     name = aws_lb.brick_lb.dns_name
