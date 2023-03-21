@@ -128,3 +128,73 @@ footer a:hover {
 footer p {
   margin-bottom: 0;
 }
+
+.selected-keyword {
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  padding: 2px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+/* Your existing styles remain unchanged */
+
+/* Add new CSS rules for the footer */
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.footer-center {
+  text-align: center;
+  flex-grow: 1;
+}
+
+.footer-right {
+  text-align: right;
+}
+
+/* If you want the footer to be at the bottom of the page */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.crypto-donations-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Add media query for smaller screens */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+  }
+
+  .footer-center {
+    margin-bottom: 1rem;
+  }
+
+  .footer-right {
+    text-align: center;
+  }
+}
