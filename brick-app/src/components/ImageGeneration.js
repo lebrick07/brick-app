@@ -67,6 +67,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const apiEndpoint = process.env.REACT_APP_OPENAI_IMAGE_API_URL;
+const modelName = process.env.REACT_APP_OPENAI_MODEL;
 
 const ImageGeneration = ({
   conversationHistory,
@@ -94,7 +95,7 @@ const ImageGeneration = ({
       const response = await axios.post(
         process.env.REACT_APP_OPENAI_URL,
         {
-          model: "text-davinci-002",
+          model: modelName,
           prompt: explanationPrompt,
           temperature: 0.5,
           max_tokens: 200,
