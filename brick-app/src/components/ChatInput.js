@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+
+import React, { useState, useRef } from "react";
 
 function ChatInput() {
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
   const [error, setError] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
+  const [showChatHistory, setShowChatHistory] = useState(false);
+
+  const chatHistoryRef = useRef(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const prompt = message;
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
     const modelName = process.env.REACT_APP_OPENAI_MODEL;
     const apiUrl = process.env.REACT_APP_OPENAI_URL;
 
+    const historyPrompt = chatHistory.map((entry) => `User: ${entry.message}\n ${entry.response}`).join("\n\n");
+    const prompt = `${historyPrompt}\n\nUser: ${message}`;
     const requestOptions = {
       method: "POST",
       headers: {
@@ -22,7 +28,7 @@ function ChatInput() {
       body: JSON.stringify({
         prompt,
         temperature: 0.5,
-        max_tokens: 100,
+        max_tokens: 2000,
         model: modelName,
       }),
     };
@@ -31,8 +37,10 @@ function ChatInput() {
       const response = await fetch(apiUrl, requestOptions);
       const data = await response.json();
       if (data.choices && data.choices.length > 0) {
-        setResponse(data.choices[0].text);
+        const newResponse = data.choices[0].text;
+        setResponse(newResponse);
         setError("");
+        setChatHistory((prevHistory) => [...prevHistory, { message, response: newResponse }]);
       } else {
         setResponse("");
         setError("Sorry, no response was found.");
@@ -41,6 +49,12 @@ function ChatInput() {
       setError("There was an error processing your request. Please try again later.");
       setResponse("");
     }
+
+    setMessage("");
+  };
+
+  const toggleChatHistory = () => {
+    setShowChatHistory((prevShow) => !prevShow);
   };
 
   return (
@@ -56,7 +70,20 @@ function ChatInput() {
         <button type="submit">Send</button>
       </form>
       {error && <p>Error: {error}</p>}
-      {response && <p className="response-box">{response}</p>}
+      {response && <p className="response-box2">{response}</p>}
+      <button onClick={toggleChatHistory}>
+        {showChatHistory ? "Hide chat history" : "Show chat history"}
+      </button>
+      {showChatHistory && (
+        <div className="chat-history" ref={chatHistoryRef}>
+          {chatHistory.map((entry, index) => (
+            <div key={index}>
+              <p>User: {entry.message}</p>
+              <p>Bot: {entry.response}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

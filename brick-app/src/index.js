@@ -4,13 +4,37 @@ import './css/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './css/styles.css';
+import './css/Navbar.css';
+// import About from './components/pages/About';
+// import Contact from './components/pages/Contact';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <h1>Magic Brick</h1>
-    <h2>Ask me anything...</h2>
+    <nav class="navbar">
+      <div class="container">
+        {/* <a class="navbar-brand" href="#">ChatBot</a> */}
+        <div class="navbar-nav">
+          <a class="nav-link" href="index">Home</a>
+          <a class="nav-link" href="About">About</a>
+          <a class="nav-link" href="Contact">Contact</a>
+        </div>
+      </div>
+    </nav>
+    <h1>Brick</h1>
+    {/* <h2>Ask me anything...</h2> */}
     <App />
+    <br></br>
+      <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <p>&copy; 2023 <a href="https://brick.autometalabs.io">Autometa Labs</a></p>
+          </div>
+        </div>
+      </div>
+      </footer>
+
   </React.StrictMode>
 );
 

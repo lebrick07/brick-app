@@ -29,7 +29,7 @@ body {
   }
   
   input {
-    width: 33%;
+    width: 75%;
     padding: 10px;
     margin-bottom: 10px;
     box-sizing: border-box;
@@ -69,3 +69,62 @@ body {
     margin: auto;
   }
   
+  .response-box2 {
+    border: 1px solid rgb(223, 147, 147);
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #3ff3ae;
+    font-size: 18px;
+    line-height: 1.5;
+    width: 95%;
+    margin: auto;
+  }
+
+  .chat-history {
+  height: 300px;
+  overflow: auto;
+}
+
+.chat-history-container {
+  position: relative;
+  margin-top: 20px;
+}
+
+.toggle-history-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.chat-history {
+  overflow: auto;
+  border: 1px solid rgb(223, 147, 147);
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #c5d0ee;
+  font-size: 18px;
+  line-height: 1.5;
+  width: 80%;
+  margin: auto;
+}
+
+footer {
+  background-color: #c1add8;
+  color: black;
+  text-align: center;
+  padding: 1rem;
+}
+
+footer a {
+  color: black;
+}
+
+footer a:hover {
+  color: #787280;
+}
+
+footer p {
+  margin-bottom: 0;
+}
