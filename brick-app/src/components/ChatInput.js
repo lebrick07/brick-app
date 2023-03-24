@@ -13,7 +13,7 @@ function ChatInput() {
     event.preventDefault();
 
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-    const modelName = process.env.REACT_APP_OPENAI_MODEL;
+    const modelName = process.env.REACT_APP_OPENAI_TEXT_MODEL;
     const apiUrl = process.env.REACT_APP_OPENAI_URL;
 
     const historyPrompt = chatHistory.map((entry) => `User: ${entry.message}\n ${entry.response}`).join("\n\n");
