@@ -21,30 +21,6 @@ import './css/App.css';
 import './css/ImageGeneration.css';
 import './css/Chat.css';
 
-
-// function App() {
-//   const [conversationHistory, setConversationHistory] = useState([]);
-
-//   const handleNewMessage = (newMessage) => {
-//     setConversationHistory([...conversationHistory, newMessage]);
-//   };
-
-//   return (
-//     <div className="App">
-//       <h2>Ask me anything..</h2>
-//       <ChatInput onNewMessage={handleNewMessage} />
-//       <br></br>
-//       <br></br>
-//       <h2>Wanna see a cool image?</h2>
-//       {/* <ImageGeneration conversationHistory={conversationHistory} /> */}
-//       {/* <ImageGeneration /> */}
-
-//       {/* <Donations /> */}
-
-//     </div>
-//   );
-// }
-
 function App() {
   const [conversationHistory, setConversationHistory] = useState([]);
   const [triggerImageGeneration, setTriggerImageGeneration] = useState(false);
@@ -74,3 +50,4 @@ function App() {
 
 
 export default App;
+
