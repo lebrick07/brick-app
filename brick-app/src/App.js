@@ -20,6 +20,7 @@ import ImageGeneration from './components/ImageGeneration';
 import './css/App.css';
 import './css/ImageGeneration.css';
 import './css/Chat.css';
+import BrickBot from './images/brickbot.png';
 
 function App() {
   const [conversationHistory, setConversationHistory] = useState([]);
@@ -31,6 +32,12 @@ function App() {
 
   return (
     <div className="App">
+      <h1>Brickbot</h1>
+      <img 
+        style={{ width: '200px', height: 'auto' }}
+        src={BrickBot}
+        alt="Brickbot">
+      </img>
       <h2>Ask me anything..</h2>
       <ChatInput
         onNewMessage={handleNewMessage}
