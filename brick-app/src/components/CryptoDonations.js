@@ -13,12 +13,10 @@ const CryptoDonations = () => {
       const ethereumProvider = await detectEthereumProvider();
       if (ethereumProvider) {
         setProvider(ethereumProvider);
-      } else {
-        alert('Please install MetaMask or another compatible Ethereum wallet!');
       }
     };
     init();
-  }, []);
+  }, []);  
 
   const connectWallet = async () => {
     if (provider && window.ethereum) {
