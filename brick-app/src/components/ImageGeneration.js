@@ -19,7 +19,7 @@ const ImageGeneration = () => {
       const response = await axios.post(
         apiEndpoint,
         {
-          model: "image-alpha-001",
+          model: process.env.REACT_APP_OPENAI_IMAGE_MODEL,
           prompt: prompt,
           size: "512x512",
           n: 1,
