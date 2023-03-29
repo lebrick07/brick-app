@@ -9,6 +9,7 @@ Welcome to the Brickbot repository, your AI-driven assistant designed to interac
 1. [Introduction](#introduction)
 2. [Infrastructure Diagram](#infrastructure-diagram)
 3. [Deployment Tools](#deployment-tools)
+4. [Conclusion](#Conclusion)
 
 ## Introduction
 
