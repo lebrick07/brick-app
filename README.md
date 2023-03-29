@@ -20,13 +20,16 @@ Brickbot is a user-friendly interface designed to interact with various AI model
 
 The diagram above showcases the main components of the Brickbot infrastructure:
 
-- **EC2 Instance**: Virtual server that hosts the Kubernetes cluster.
-- **Network Load Balancer (NLB)**: Balances traffic across multiple instances to ensure optimal performance.
-- **Resource Group**: A logical container for resources within an AWS account.
-- **Security Group**: Controls inbound and outbound traffic for the associated resources.
-- **Route 53 Record**: DNS record that routes traffic to the application.
+| Component                | Description                                                |
+|--------------------------|------------------------------------------------------------|
+| EC2 Instance             | Virtual server that hosts the Kubernetes cluster.         |
+| Network Load Balancer (NLB) | Balances traffic across multiple instances to ensure optimal performance. |
+| Resource Group           | A logical container for resources within an AWS account.  |
+| Security Group           | Controls inbound and outbound traffic for the associated resources. |
+| Route 53 Record          | DNS record that routes traffic to the application.        |
 
-Brickbot runs on port 31001, while the NLB exposes the app through port forwarding on ports 80 and 443. It also has an SSL certificate from AWS Certificate Manager.
+
+Brickbot runs on port `31001`, while the NLB exposes the app through port forwarding on ports `80` and `443`. It also has an SSL certificate from AWS Certificate Manager.
 
 ## Deployment Tools
 
