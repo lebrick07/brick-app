@@ -8,6 +8,7 @@ import './css/Chat.css';
 import BrickBot from './images/brickbot.png';
 
 function App() {
+  const [selectedOption, setSelectedOption] = useState('');
   const [conversationHistory, setConversationHistory] = useState([]);
   const [triggerImageGeneration, setTriggerImageGeneration] = useState(false);
 
@@ -15,27 +16,37 @@ function App() {
     setConversationHistory([...conversationHistory, newMessage]);
   };
 
-  return (
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  return(
     <div className="App">
       <h1>Brickbot</h1>
-      <img 
+      <img
         style={{ width: '200px', height: 'auto' }}
         src={BrickBot}
         alt="Brickbot">
       </img>
       <h2>Ask me anything..</h2>
-      <ChatInput
-        onNewMessage={handleNewMessage}
-        onTriggerImageGeneration={() => setTriggerImageGeneration(true)}
-      />
-      <br></br>
-      <br></br>
-      <h2>Wanna see a cool image?</h2>
-      <ImageGeneration
-        conversationHistory={conversationHistory}
-        triggerImageGeneration={triggerImageGeneration}
-        onResetTrigger={() => setTriggerImageGeneration(false)}
-      />
+      <select value={selectedOption} onChange={handleOptionChange}>
+        <option value="">Select an option</option>
+        <option value="chat">Chat</option>
+        <option value="image">Image</option>
+      </select>
+      {selectedOption === 'chat' && (
+        <ChatInput
+          onNewMessage={handleNewMessage}
+          onTriggerImageGeneration={() => setTriggerImageGeneration(true)}
+        />
+      )}
+      {selectedOption === 'image' && (
+          <ImageGeneration
+            conversationHistory={conversationHistory}
+            triggerImageGeneration={triggerImageGeneration}
+            onResetTrigger={() => setTriggerImageGeneration(false)}
+          />
+      )}
     </div>
   );
 }
