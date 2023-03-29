@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 // import React from 'react';
 import ChatInput from './components/ChatInput';
 import ImageGeneration from './components/ImageGeneration';
+import AudioTranscript from './components/AudioTranscript'
 import './css/App.css';
 import './css/ImageGeneration.css';
 import './css/Chat.css';
@@ -20,7 +21,7 @@ function App() {
     setSelectedOption(event.target.value);
   };
 
-  return(
+  return (
     <div className="App">
       <h1>Brickbot</h1>
       <img
@@ -33,6 +34,7 @@ function App() {
         <option value="">Select an option</option>
         <option value="chat">Chat</option>
         <option value="image">Image</option>
+        <option value="audio">Audio</option>
       </select>
       {selectedOption === 'chat' && (
         <ChatInput
@@ -41,11 +43,14 @@ function App() {
         />
       )}
       {selectedOption === 'image' && (
-          <ImageGeneration
-            conversationHistory={conversationHistory}
-            triggerImageGeneration={triggerImageGeneration}
-            onResetTrigger={() => setTriggerImageGeneration(false)}
-          />
+        <ImageGeneration
+          conversationHistory={conversationHistory}
+          triggerImageGeneration={triggerImageGeneration}
+          onResetTrigger={() => setTriggerImageGeneration(false)}
+        />
+      )}
+      {selectedOption === 'audio' && (
+        <AudioTranscript/>
       )}
     </div>
   );
