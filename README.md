@@ -35,9 +35,11 @@ Brickbot runs on port `31001`, while the NLB exposes the app through port forwar
 
 The following tools were used to create and deploy Brickbot:
 
-- **Terraform**: Infrastructure as Code (IaC) tool used to create the AWS infrastructure. State is stored in an S3 bucket.
-- **RKE (Rancher Kubernetes Engine)**: CLI tool used to create the Kubernetes cluster on the EC2 instances.
-- **React**: A popular JavaScript library for building the user interface of the Brickbot application.
+| Tool                     | Description                                                |
+|--------------------------|------------------------------------------------------------|
+| Terraform                | Infrastructure as Code (IaC) tool used to create the AWS infrastructure. State is stored in an S3 bucket. |
+| RKE (Rancher Kubernetes Engine) | CLI tool used to create the Kubernetes cluster on the EC2 instances. |
+| React                    | A popular JavaScript library for building the user interface of the Brickbot application. |
 
 These tools work together to create a robust and scalable infrastructure for the Brickbot application, allowing it to efficiently interact with the OpenAI API models and potentially connect to other AI engines in the future.
 
