@@ -30,4 +30,35 @@ override.tf.json
 
 .env
 
-.DS_Store
+# dependencies
+brick-app/node_modules
+
+# build directory
+brick-app/build
+
+# environment files
+brick-app/.env
+brick-app/.env.local
+brick-app/.env.development.local
+brick-app/.env.test.local
+brick-app/.env.production.local
+
+# misc
+brick-app/.DS_Store
+Thumbs.db
+UserInterfaceState.xcuserstate
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# production
+dist
+
+# JetBrains IDEs
+.idea
+
+# Visual Studio Code
+.vscode
+
