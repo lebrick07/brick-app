@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
+import { useTheme } from '@mui/material/styles';
+import { Button, Typography, TextField } from '@mui/material';
 
 const CryptoDonations = () => {
+  const theme = useTheme();
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState('');
   const [amount, setAmount] = useState('');
@@ -16,7 +19,7 @@ const CryptoDonations = () => {
       }
     };
     init();
-  }, []);  
+  }, []);
 
   const connectWallet = async () => {
     if (provider && window.ethereum) {
@@ -60,30 +63,66 @@ const CryptoDonations = () => {
   return (
     <div>
       {!connected ? (
-        <button onClick={connectWallet} style={{ fontSize: '0.8rem', color: '#555', border: 'none', fontWeight: 'bold' }}>
+        <Button
+          onClick={connectWallet}
+          variant="contained"
+          size="small"
+          sx={{
+            fontSize: '0.8rem',
+            fontWeight: 'bold',
+            color: theme.palette.text.primary,
+          }}
+        >
           Connect ETH Wallet to Donate
-        </button>
+        </Button>
       ) : (
         <>
-          <input
+          <TextField
             type="number"
             step="0.01"
             placeholder="ETH"
             onChange={(e) => setAmount(e.target.value)}
-            style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#555', background: 'transparent', border: 'none', borderBottom: '1px solid #555', width: '4rem', marginRight: '0.5rem' }}
+            sx={{
+              fontSize: '0.8rem',
+              fontWeight: 'bold',
+              color: theme.palette.text.primary,
+              background: 'transparent',
+              border: 'none',
+              borderBottom: `1px solid ${theme.palette.text.primary}`,
+              width: '4rem',
+              marginRight: '0.5rem',
+            }}
           />
-          <button onClick={() => sendDonation(amount)} style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#555', background: 'transparent', border: 'none' }}>
+          <Button
+            onClick={() => sendDonation(amount)}
+            variant="contained"
+            size="small"
+            sx={{
+              fontSize: '0.8rem',
+              fontWeight: 'bold',
+              color: theme.palette.text.primary,
+              background: 'transparent',
+              border: 'none',
+            }}
+          >
             Donate
-          </button>
+          </Button>
         </>
       )}
-      <p style={{ fontSize: '1rem', fontStyle: 'italic', color: '#555', marginTop: '0.5rem', textAlign: 'center' }}>
+      <Typography
+        variant="subtitle1"
+        sx={{
+          fontSize: '1rem',
+          fontStyle: 'italic',
+          color: theme.palette.text.primary,
+          marginTop: '0.5rem',
+          textAlign: 'center',
+        }}
+      >
         Your support helps us build a better future. Thank you!
-      </p>
+      </Typography>
     </div>
   );
-    
 };
 
 export default CryptoDonations;
-
