@@ -35,20 +35,6 @@ function App() {
       </img>
       <Typography variant="h2">Ask me anything..</Typography>
       <br></br>
-      {/* <FormControl variant="outlined">
-        <Select 
-          value={selectedOption}
-          onChange={handleOptionChange}
-          label="Select an option"
-          displayEmpty>
-          <MenuItem value="">
-            <em>Select an option</em>
-          </MenuItem>
-          <MenuItem value="chat">Chat with Brickbot</MenuItem>
-          <MenuItem value="image">Image Generator</MenuItem>
-          <MenuItem value="audio">Audio Transcriber</MenuItem>
-        </Select>
-      </FormControl> */}
       <FormControl variant="outlined" sx={{ borderRadius: '10px' }}>
         <Select 
           value={selectedOption}
