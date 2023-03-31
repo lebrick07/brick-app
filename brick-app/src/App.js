@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import ChatInput from './components/ChatInput';
 import ImageGeneration from './components/ImageGeneration';
 import AudioTranscript from './components/AudioTranscript';
-// import BrickBot from './images/brickbot.png';
-import { Box, Typography, FormControl, Select, MenuItem } from '@mui/material';
+import { Box, Typography, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 function App() {
   const [selectedOption, setSelectedOption] = useState('');
@@ -14,8 +13,8 @@ function App() {
     setConversationHistory([...conversationHistory, newMessage]);
   };
 
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
+  const handleOptionChange = (event, newOption) => {
+    setSelectedOption(newOption);
   };
 
   return (
@@ -27,29 +26,24 @@ function App() {
         },
       }}
     >
-      {/* <Typography variant="h1">Brickbot</Typography> */}
-      {/* <img
-        style={{ width: '200px', height: 'auto' }}
-        src={BrickBot}
-        alt="Brickbot">
-      </img> */}
       <Typography variant="h2">Ask me anything..</Typography>
-      <br></br>
-      <FormControl variant="outlined" sx={{ borderRadius: '10px' }}>
-        <Select 
-          value={selectedOption}
-          onChange={handleOptionChange}
-          label="Select an option"
-          displayEmpty
-        >
-          <MenuItem value="">
-            <em>Select an option</em>
-          </MenuItem>
-          <MenuItem value="chat">Chat</MenuItem>
-          <MenuItem value="image">Generate image</MenuItem>
-          <MenuItem value="audio">Audio transcriber</MenuItem>
-        </Select>
-      </FormControl>
+      <br />
+      <ToggleButtonGroup
+        value={selectedOption}
+        exclusive
+        onChange={handleOptionChange}
+        sx={{ marginBottom: '20px' }}
+      >
+        <ToggleButton value="chat" sx={{ width: '33%' }}>
+          Chat
+        </ToggleButton>
+        <ToggleButton value="image" sx={{ width: '33%' }}>
+          Generate image
+        </ToggleButton>
+        <ToggleButton value="audio" sx={{ width: '33%' }}>
+          Audio transcriber
+        </ToggleButton>
+      </ToggleButtonGroup>
 
       {selectedOption === 'chat' && (
         <ChatInput
@@ -64,12 +58,9 @@ function App() {
           onResetTrigger={() => setTriggerImageGeneration(false)}
         />
       )}
-      {selectedOption === 'audio' && (
-        <AudioTranscript/>
-      )}
+      {selectedOption === 'audio' && <AudioTranscript />}
     </Box>
   );
 }
 
 export default App;
-
