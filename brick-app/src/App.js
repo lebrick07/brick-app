@@ -45,9 +45,9 @@ function App() {
           <MenuItem value="">
             <em>Select an option</em>
           </MenuItem>
-          <MenuItem value="chat">Chat with Brickbot</MenuItem>
-          <MenuItem value="image">Image Generator</MenuItem>
-          <MenuItem value="audio">Audio Transcriber</MenuItem>
+          <MenuItem value="chat">Chat</MenuItem>
+          <MenuItem value="image">Generate image</MenuItem>
+          <MenuItem value="audio">Audio transcriber</MenuItem>
         </Select>
       </FormControl>
 
