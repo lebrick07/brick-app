@@ -10,6 +10,52 @@ import SendIcon from '@mui/icons-material/Send';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 
+// const useStyles = makeStyles((theme) => ({
+//   container: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     height: '100%',
+//     overflow: 'hidden',
+//   },
+//   input: {
+//     flexGrow: 1,
+//     marginRight: theme.spacing(1),
+//     marginBottom: theme.spacing(1),
+//   },
+//   responseBox: {
+//     backgroundColor: theme.palette.background.paper,
+//     padding: theme.spacing(2),
+//     borderRadius: '10px',
+//     marginTop: theme.spacing(1),
+//   },
+//   responseBoxCode: {
+//     backgroundColor: theme.palette.background.paper,
+//     padding: theme.spacing(2),
+//     borderRadius: '10px',
+//     marginTop: theme.spacing(1),
+//     overflowX: 'scroll',
+//     fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+//     fontSize: '0.9rem',
+//   },
+//   chatHistory: {
+//     marginTop: theme.spacing(1),
+//     border: `1px solid ${theme.palette.divider}`,
+//     borderRadius: '10px',
+//     padding: theme.spacing(2),
+//     maxHeight: '300px',
+//     overflowY: 'scroll',
+//   },
+//   chatHistoryEntry: {
+//     marginBottom: theme.spacing(1),
+//   },
+//   errorMessage: {
+//     color: 'red',
+//   },
+//   toggleHistoryButton: {
+//     marginTop: theme.spacing(1),
+//   },
+// }));
+
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -27,6 +73,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     borderRadius: '10px',
     marginTop: theme.spacing(1),
+    overflowX: 'scroll',
+    fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+    fontSize: '0.9rem',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '100%',
+    },
   },
   responseBoxCode: {
     backgroundColor: theme.palette.background.paper,
@@ -36,6 +88,10 @@ const useStyles = makeStyles((theme) => ({
     overflowX: 'scroll',
     fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
     fontSize: '0.9rem',
+    [theme.breakpoints.down('sm')]: {
+      whiteSpace: 'pre-wrap',
+      wordBreak: 'break-all',
+    },
   },
   chatHistory: {
     marginTop: theme.spacing(1),
@@ -55,7 +111,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
 }));
-
 
 function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const [message, setMessage] = useState('');
