@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ChatInput from './components/ChatInput';
 import ImageGeneration from './components/ImageGeneration';
 import AudioTranscript from './components/AudioTranscript';
-import BrickBot from './images/brickbot.png';
+// import BrickBot from './images/brickbot.png';
 import { Box, Typography, FormControl, Select, MenuItem } from '@mui/material';
 
 function App() {
@@ -27,12 +27,12 @@ function App() {
         },
       }}
     >
-      <Typography variant="h1">Brickbot</Typography>
-      <img
+      {/* <Typography variant="h1">Brickbot</Typography> */}
+      {/* <img
         style={{ width: '200px', height: 'auto' }}
         src={BrickBot}
         alt="Brickbot">
-      </img>
+      </img> */}
       <Typography variant="h2">Ask me anything..</Typography>
       <br></br>
       <FormControl variant="outlined" sx={{ borderRadius: '10px' }}>
@@ -72,3 +72,4 @@ function App() {
 }
 
 export default App;
+
