@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+// import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { makeStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -24,9 +24,8 @@ const useStyles = makeStyles((theme) => ({
   },
   responseBox: {
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2),
+    margin: `${theme.spacing(1)}px 0`,
     borderRadius: '10px',
-    marginTop: theme.spacing(1),
     overflowX: 'scroll',
     fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
     fontSize: '0.9rem',
@@ -46,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
       whiteSpace: 'pre-wrap',
       wordBreak: 'break-all',
     },
-  },
+    textAlign: 'left',
+  },  
   chatHistory: {
     marginTop: theme.spacing(1),
     border: `1px solid ${theme.palette.divider}`,
@@ -64,6 +64,24 @@ const useStyles = makeStyles((theme) => ({
   toggleHistoryButton: {
     marginTop: theme.spacing(1),
   },
+  code: {
+    backgroundColor: (theme) =>
+      theme.palette && theme.palette.mode === "dark"
+        ? "rgb(49, 49, 49)"
+        : "rgb(248, 248, 248)",
+    color: (theme) =>
+      theme.palette && theme.palette.mode === "dark"
+        ? "rgb(189, 147, 249)"
+        : "rgb(32, 32, 32)",
+    padding: "0.2rem 0.5rem",
+    borderRadius: "5px",
+    fontSize: "1rem",
+    whiteSpace: "pre-wrap",
+    overflowWrap: "break-word",
+    wordWrap: "break-word",
+    boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.2)",
+    textAlign: 'left',
+  },  
 }));
 
 function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
@@ -152,14 +170,15 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
       {error && <p className={classes.errorMessage}>Error: {error}</p>}
       {response && (
         isCode(response) ? (
-          <pre className={classes.responseBox}>
-            <SyntaxHighlighter style={dracula}>
+          <pre className={classes.responseBoxCode}>
+            {/* <SyntaxHighlighter style={dracula}> */}
               {response}
-            </SyntaxHighlighter>
+            {/* </SyntaxHighlighter> */}
           </pre>
         ) : (
           <p className={classes.responseBox}>{response}</p>
         )
+        // <pre className={isCode(response) ? `${classes.responseBox} ${classes.code}` : classes.responseBox}>{response}</pre>
       )}
       <Button className={classes.toggleHistoryButton} variant="outlined" size="small" onClick={toggleChatHistory}>
         {showChatHistory ? 'Hide chat history' : 'Show chat history'}
