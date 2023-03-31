@@ -58,7 +58,8 @@ function App() {
           onResetTrigger={() => setTriggerImageGeneration(false)}
         />
       )}
-      {selectedOption === 'audio' && <AudioTranscript />}
+      {selectedOption === 'audio' && 
+        <AudioTranscript />}
     </Box>
   );
 }

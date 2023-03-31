@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: theme.spacing(2),
     // backgroundColor: theme.palette.background.paper,
+    height: 'calc(100% - 150px)',
     borderRadius: '10px',
     marginTop: theme.spacing(2),
   },

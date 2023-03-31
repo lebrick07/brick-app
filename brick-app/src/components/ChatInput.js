@@ -1,4 +1,3 @@
-// import React, { useState, useRef } from 'react';
 import React, { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -6,66 +5,21 @@ import { makeStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
-// import SendIcon from '@mui/icons-material/SendRounded';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-
-// const useStyles = makeStyles((theme) => ({
-//   container: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//     height: '100%',
-//     overflow: 'hidden',
-//   },
-//   input: {
-//     flexGrow: 1,
-//     marginRight: theme.spacing(1),
-//     marginBottom: theme.spacing(1),
-//   },
-//   responseBox: {
-//     backgroundColor: theme.palette.background.paper,
-//     padding: theme.spacing(2),
-//     borderRadius: '10px',
-//     marginTop: theme.spacing(1),
-//   },
-//   responseBoxCode: {
-//     backgroundColor: theme.palette.background.paper,
-//     padding: theme.spacing(2),
-//     borderRadius: '10px',
-//     marginTop: theme.spacing(1),
-//     overflowX: 'scroll',
-//     fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-//     fontSize: '0.9rem',
-//   },
-//   chatHistory: {
-//     marginTop: theme.spacing(1),
-//     border: `1px solid ${theme.palette.divider}`,
-//     borderRadius: '10px',
-//     padding: theme.spacing(2),
-//     maxHeight: '300px',
-//     overflowY: 'scroll',
-//   },
-//   chatHistoryEntry: {
-//     marginBottom: theme.spacing(1),
-//   },
-//   errorMessage: {
-//     color: 'red',
-//   },
-//   toggleHistoryButton: {
-//     marginTop: theme.spacing(1),
-//   },
-// }));
 
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
+    padding: theme.spacing(2),
+    height: 'calc(100% - 150px)',
+    marginTop: theme.spacing(2),
     overflow: 'hidden',
   },
   input: {
     flexGrow: 1,
-    marginRight: theme.spacing(1),
+    // marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
   responseBox: {
@@ -179,7 +133,6 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   return (
     <div className={classes.container}>
       <form onSubmit={handleSubmit}>
-        <br></br>
         <TextField
           className={classes.input}
           label="Enter your message here"
