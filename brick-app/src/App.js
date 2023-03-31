@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-// import React from 'react';
 import ChatInput from './components/ChatInput';
 import ImageGeneration from './components/ImageGeneration';
-import AudioTranscript from './components/AudioTranscript'
-import './css/App.css';
-import './css/ImageGeneration.css';
-import './css/Chat.css';
+import AudioTranscript from './components/AudioTranscript';
 import BrickBot from './images/brickbot.png';
+import { Box, Typography, FormControl, Select, MenuItem } from '@mui/material';
 
 function App() {
   const [selectedOption, setSelectedOption] = useState('');
@@ -22,20 +19,52 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Brickbot</h1>
+    <Box
+      sx={{
+        textAlign: 'center',
+        '& .MuiTypography-root': {
+          color: (theme) => theme.palette.text.primary,
+        },
+      }}
+    >
+      <Typography variant="h1">Brickbot</Typography>
       <img
         style={{ width: '200px', height: 'auto' }}
         src={BrickBot}
         alt="Brickbot">
       </img>
-      <h2>Ask me anything..</h2>
-      <select value={selectedOption} onChange={handleOptionChange}>
-        <option value="">Select an option</option>
-        <option value="chat">Chat</option>
-        <option value="image">Image</option>
-        <option value="audio">Audio</option>
-      </select>
+      <Typography variant="h2">Ask me anything..</Typography>
+      <br></br>
+      {/* <FormControl variant="outlined">
+        <Select 
+          value={selectedOption}
+          onChange={handleOptionChange}
+          label="Select an option"
+          displayEmpty>
+          <MenuItem value="">
+            <em>Select an option</em>
+          </MenuItem>
+          <MenuItem value="chat">Chat with Brickbot</MenuItem>
+          <MenuItem value="image">Image Generator</MenuItem>
+          <MenuItem value="audio">Audio Transcriber</MenuItem>
+        </Select>
+      </FormControl> */}
+      <FormControl variant="outlined" sx={{ borderRadius: '10px' }}>
+        <Select 
+          value={selectedOption}
+          onChange={handleOptionChange}
+          label="Select an option"
+          displayEmpty
+        >
+          <MenuItem value="">
+            <em>Select an option</em>
+          </MenuItem>
+          <MenuItem value="chat">Chat with Brickbot</MenuItem>
+          <MenuItem value="image">Image Generator</MenuItem>
+          <MenuItem value="audio">Audio Transcriber</MenuItem>
+        </Select>
+      </FormControl>
+
       {selectedOption === 'chat' && (
         <ChatInput
           onNewMessage={handleNewMessage}
@@ -52,10 +81,8 @@ function App() {
       {selectedOption === 'audio' && (
         <AudioTranscript/>
       )}
-    </div>
+    </Box>
   );
 }
 
-
 export default App;
-
