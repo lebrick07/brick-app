@@ -27,4 +27,11 @@ const GoogleLoginButton = ({ onGoogleLoginSuccess, onGoogleLoginFailure }) => {
   );
 };
 
+// Add defaultProps to provide default empty functions
+GoogleLoginButton.defaultProps = {
+  onGoogleLoginSuccess: () => {},
+  onGoogleLoginFailure: () => {},
+};
+
 export default GoogleLoginButton;
+
