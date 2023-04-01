@@ -1,5 +1,6 @@
 import React from 'react';
 import { GoogleLogin } from 'react-google-login';
+import { Box } from '@mui/material';
 
 const GoogleLoginButton = ({ onGoogleLoginSuccess, onGoogleLoginFailure }) => {
   const clientId = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID;
@@ -17,11 +18,26 @@ const GoogleLoginButton = ({ onGoogleLoginSuccess, onGoogleLoginFailure }) => {
   return (
     <GoogleLogin
       clientId={clientId}
-      buttonText="Sign in with Google"
+      render={(renderProps) => (
+        <Box
+          onClick={renderProps.onClick}
+          sx={{
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '0.9rem',
+            padding: '6px 16px',
+            border: '1px solid',
+            borderRadius: '4px',
+          }}
+        >
+          Sign in with Google
+        </Box>
+      )}
       onSuccess={handleGoogleLoginSuccess}
       onFailure={handleGoogleLoginFailure}
       cookiePolicy={'single_host_origin'}
-      style={{ marginTop: '1rem' }}
       isSignedIn={false}
     />
   );
@@ -34,4 +50,3 @@ GoogleLoginButton.defaultProps = {
 };
 
 export default GoogleLoginButton;
-

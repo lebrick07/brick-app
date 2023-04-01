@@ -3,7 +3,7 @@ import ChatInput from './components/ChatInput';
 import ImageGeneration from './components/ImageGeneration';
 import AudioTranscript from './components/AudioTranscript';
 import TextToVideo from './components/TextToVideo'; // Import the TextToVideo component
-import GoogleLoginButton from './components/GoogleLoginButton';
+// import GoogleLoginButton from './components/GoogleLoginButton';
 import { Box, Typography, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 function App() {
@@ -29,9 +29,9 @@ function App() {
       }}
     >
       <Typography variant="h2">Ask me anything..</Typography>
-      <br />
+      {/* <br />
       <GoogleLoginButton />
-      <br />
+      <br /> */}
       <ToggleButtonGroup
         value={selectedOption}
         exclusive

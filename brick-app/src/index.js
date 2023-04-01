@@ -4,6 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import CryptoDonations from './components/CryptoDonations';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import GoogleLoginButton from './components/GoogleLoginButton';
 
 import About from './components/pages/About';
 import Contact from './components/pages/Contact';
@@ -96,6 +97,7 @@ function MainApp() {
             <Button color="inherit" href="/">Home</Button>
             <Button color="inherit" href="/about">About</Button>
             <Button color="inherit" href="/contact">Contact</Button>
+            <GoogleLoginButton />
           </Toolbar>
         </AppBar>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 64px - 72px)' }}>
