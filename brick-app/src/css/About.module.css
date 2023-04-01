@@ -1,22 +1,21 @@
 /* src/css/About.module.css */
 
 .aboutContainer {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: justify;
-  }
-  
-  .aboutHeader {
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .aboutParagraph {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-  
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: justify;
+}
+
+.aboutHeader {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.aboutParagraph {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}

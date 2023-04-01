@@ -1,5 +1,3 @@
-// src/components/pages/About.js
-
 import React from 'react';
 import styles from '../../css/About.module.css';
 

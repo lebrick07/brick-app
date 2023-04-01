@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-// import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { makeStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -19,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     flexGrow: 1,
-    // marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
   responseBox: {
@@ -46,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
       wordBreak: 'break-all',
     },
     textAlign: 'left',
-  },  
+  },
   chatHistory: {
     marginTop: theme.spacing(1),
     border: `1px solid ${theme.palette.divider}`,
@@ -81,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
     wordWrap: "break-word",
     boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.2)",
     textAlign: 'left',
-  },  
+  },
 }));
 
 function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
@@ -102,12 +99,12 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     // Add your API key, model name, and API URL here.
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
     const modelName = process.env.REACT_APP_OPENAI_TEXT_MODEL;
     const apiUrl = process.env.REACT_APP_OPENAI_URL;
-  
+
     const historyPrompt = chatHistory.map((entry) => `User: ${entry.message}\n ${entry.response}`).join('\n\n');
     const prompt = `${historyPrompt}\n\nUser: ${message}`;
     const requestOptions = {
@@ -123,7 +120,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         model: modelName,
       }),
     };
-  
+
     try {
       const response = await fetch(apiUrl, requestOptions);
       const data = await response.json();
@@ -140,14 +137,14 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
       setError('There was an error processing your request. Please try again later.');
       setResponse('');
     }
-  
+
     setMessage('');
   };
-  
+
   const toggleChatHistory = () => {
     setShowChatHistory((prevShow) => !prevShow);
   };
-  
+
   return (
     <div className={classes.container}>
       <form onSubmit={handleSubmit}>
@@ -172,7 +169,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         isCode(response) ? (
           <pre className={classes.responseBoxCode}>
             {/* <SyntaxHighlighter style={dracula}> */}
-              {response}
+            {response}
             {/* </SyntaxHighlighter> */}
           </pre>
         ) : (
