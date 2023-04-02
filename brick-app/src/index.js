@@ -81,7 +81,7 @@ function MainApp() {
   const [currentTheme, setCurrentTheme] = useState(() => {
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme) {
-      return storedTheme == "dark" ? darkTheme : lightTheme;
+      return storedTheme === "dark" ? darkTheme : lightTheme;
     }
 
     return darkTheme;
@@ -90,7 +90,7 @@ function MainApp() {
   const handleThemeToggle = () => {
     const newTheme = currentTheme === darkTheme ? lightTheme : darkTheme;
     setCurrentTheme(newTheme);
-    localStorage.setItem('theme', newTheme == darkTheme ? "dark" : "light");
+    localStorage.setItem('theme', newTheme === darkTheme ? "dark" : "light");
   };
 
   return (
