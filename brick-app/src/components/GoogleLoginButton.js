@@ -51,7 +51,6 @@ function GoogleLoginButton() {
         <GoogleLogout
           clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}
           onLogoutSuccess={onLogoutSuccess}
-          plugin_name='streamy'
           render={(renderProps) => (
             <Box
               onClick={renderProps.onClick}

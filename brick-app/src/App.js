@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ChatInput from './components/ChatInput';
 import ImageGeneration from './components/ImageGeneration';
 import AudioTranscript from './components/AudioTranscript';
-// import TextToVideo from './components/TextToVideo'; // Import the TextToVideo component
 import { Box, Typography, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 function App() {
@@ -27,7 +26,7 @@ function App() {
         },
       }}
     >
-      <Typography variant="h2">Ask me anything..</Typography>
+      <Typography variant="h2" sx={{ marginBottom: '20px' }}>Ask me anything</Typography>
       <ToggleButtonGroup
         value={selectedOption}
         exclusive
@@ -43,9 +42,6 @@ function App() {
         <ToggleButton value="audio" sx={{ width: '33%' }}>
           Audio to Text
         </ToggleButton>
-        {/* <ToggleButton value="video" sx={{ width: '25%' }}> Add the new ToggleButton for TextToVideo
-          Text to Video
-        </ToggleButton> */}
       </ToggleButtonGroup>
 
       {selectedOption === 'chat' && (
@@ -64,9 +60,6 @@ function App() {
       {selectedOption === 'audio' && (
         <AudioTranscript />
       )}
-      {/* {selectedOption === 'video' && ( // Add the TextToVideo component based on the selected option
-        <TextToVideo />
-      )} */}
     </Box>
   );
 }
