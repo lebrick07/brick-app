@@ -179,10 +179,19 @@ const lightTheme = createTheme({
 
 
 function MainApp() {
-  const [currentTheme, setCurrentTheme] = useState(darkTheme);
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+      return storedTheme == "dark" ? darkTheme : lightTheme;
+    }
+
+    return darkTheme;
+  });
 
   const handleThemeToggle = () => {
-    setCurrentTheme(currentTheme === darkTheme ? lightTheme : darkTheme);
+    const newTheme = currentTheme === darkTheme ? lightTheme : darkTheme;
+    setCurrentTheme(newTheme);
+    localStorage.setItem('theme', newTheme == darkTheme ? "dark" : "light");
   };
 
   return (
@@ -208,19 +217,19 @@ function MainApp() {
           </Routes>
         </Box>
         <footer>
-        <div className="container">
-          <div className="footer-container">
-            <div className="footer-center" style={{textAlign: "center"}}>
-              <p>&copy; 2023 <a href="https://brick.autometalabs.io">Autometa Labs</a></p>
-            </div>
-            <div className="footer-right" style={{textAlign: "center"}}>
-              <div className="crypto-donations-container">
-                <CryptoDonations />
+          <div className="container">
+            <div className="footer-container">
+              <div className="footer-center" style={{ textAlign: "center" }}>
+                <p>&copy; 2023 <a href="https://brick.autometalabs.io">Autometa Labs</a></p>
+              </div>
+              <div className="footer-right" style={{ textAlign: "center" }}>
+                <div className="crypto-donations-container">
+                  <CryptoDonations />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </footer>
+        </footer>
       </Router>
     </ThemeProvider>
   );
