@@ -15,7 +15,7 @@ function GoogleLoginButton() {
       })
       const isLoggedStorage = localStorage.getItem('isLoggedIn');
       const loggedUserStorage = localStorage.getItem('loggedUser');
-      if (isLoggedStorage && isLoggedStorage != 'false') {
+      if (isLoggedStorage && isLoggedStorage !== 'false') {
         setIsLoggedIn(true);
       }
       if (loggedUserStorage) {
@@ -51,6 +51,7 @@ function GoogleLoginButton() {
         <GoogleLogout
           clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}
           onLogoutSuccess={onLogoutSuccess}
+          plugin_name='streamy'
           render={(renderProps) => (
             <Box
               onClick={renderProps.onClick}
