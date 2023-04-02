@@ -27,12 +27,9 @@ const GoogleLoginButton = ({ onGoogleLoginSuccess, onGoogleLoginFailure }) => {
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '0.9rem',
-            padding: '6px 16px',
-            border: '1px solid',
-            borderRadius: '4px',
           }}
         >
-          Sign in with Google
+          SIGN IN
         </Box>
       )}
       onSuccess={handleGoogleLoginSuccess}
