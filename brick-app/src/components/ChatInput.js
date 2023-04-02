@@ -92,7 +92,8 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   // const chatHistoryRef = useRef(null);
 
   const isCode = (text) => {
-    const codeIndicators = ['{', '}', ';', '(', ')', '=', '=>', 'function', 'const', 'let', 'var', 'import', 'export'];
+    // const codeIndicators = ['{', '}', ';', '(', ')', '=', '=>', 'function', 'const', 'let', 'var', 'import', 'export'];
+    const codeIndicators = ['{', '}', ';', '(', ')', '=', '=>'];
 
     return codeIndicators.some((indicator) => text.includes(indicator));
   };
