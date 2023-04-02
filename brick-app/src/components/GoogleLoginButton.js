@@ -39,6 +39,7 @@ function GoogleLoginButton() {
   const onLogoutSuccess = () => {
     setIsLoggedIn(false);
     setLoggedUser(null);
+    loggedUser(null);
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.removeItem('loggedUser');
     console.log('SUCCESS LOG OUT');
