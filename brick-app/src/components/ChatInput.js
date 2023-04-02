@@ -168,14 +168,11 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
       {response && (
         isCode(response) ? (
           <pre className={classes.responseBoxCode}>
-            {/* <SyntaxHighlighter style={dracula}> */}
             {response}
-            {/* </SyntaxHighlighter> */}
           </pre>
         ) : (
           <p className={classes.responseBox}>{response}</p>
         )
-        // <pre className={isCode(response) ? `${classes.responseBox} ${classes.code}` : classes.responseBox}>{response}</pre>
       )}
       <Button className={classes.toggleHistoryButton} variant="outlined" size="small" onClick={toggleChatHistory}>
         {showChatHistory ? 'Hide chat history' : 'Show chat history'}

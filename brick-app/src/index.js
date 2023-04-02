@@ -101,7 +101,7 @@ function MainApp() {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Brickbot
+              Welcome to Brickbot, {localStorage.getItem('loggedUser') ? localStorage.getItem('loggedUser') : 'explorer'}
             </Typography>
             <Button color="inherit" href="/">Home</Button>
             <Button color="inherit" href="/about">About</Button>

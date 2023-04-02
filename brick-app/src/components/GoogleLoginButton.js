@@ -5,6 +5,7 @@ import { gapi } from 'gapi-script';
 
 function GoogleLoginButton() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedUser, setLoggedUser] = useState()
 
   useEffect(() => {
     function start() {
@@ -12,29 +13,36 @@ function GoogleLoginButton() {
         clientId: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
         scope: 'email',
       })
-        .then(() => {
-          const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
-          setIsLoggedIn(isSignedIn);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      const isLoggedStorage = localStorage.getItem('isLoggedIn');
+      const loggedUserStorage = localStorage.getItem('loggedUser');
+      if (isLoggedStorage && isLoggedStorage != 'false') {
+        setIsLoggedIn(true);
+      }
+      if (loggedUserStorage) {
+        setLoggedUser(loggedUserStorage)
+      }
     }
 
     gapi.load('client:auth2', start);
   }, []);
 
   const onSuccess = response => {
-    console.log('SUCCESS', response);
     setIsLoggedIn(true);
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('loggedUser', response.profileObj.name);
+    console.log('SUCCESS', response);
+    window.location.reload();
   };
   const onFailure = response => {
     console.log('FAILED', response);
   };
-
   const onLogoutSuccess = () => {
-    console.log('SUCESS LOG OUT');
     setIsLoggedIn(false);
+    setLoggedUser(null);
+    localStorage.setItem('isLoggedIn', 'false');
+    localStorage.removeItem('loggedUser');
+    console.log('SUCCESS LOG OUT');
+    window.location.reload();
   };
 
   return (
