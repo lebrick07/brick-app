@@ -38,10 +38,10 @@ function App() {
           Chat
         </ToggleButton>
         <ToggleButton value="image" sx={{ width: '33%' }}>
-          Generate image
+          Text to Image
         </ToggleButton>
         <ToggleButton value="audio" sx={{ width: '33%' }}>
-          Audio transcriber
+          Audio to Text
         </ToggleButton>
         {/* <ToggleButton value="video" sx={{ width: '25%' }}> Add the new ToggleButton for TextToVideo
           Text to Video
