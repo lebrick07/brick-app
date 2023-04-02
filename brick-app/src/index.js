@@ -78,10 +78,19 @@ const lightTheme = createTheme({
 
 
 function MainApp() {
-  const [currentTheme, setCurrentTheme] = useState(darkTheme);
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+      return storedTheme == "dark" ? darkTheme : lightTheme;
+    }
+
+    return darkTheme;
+  });
 
   const handleThemeToggle = () => {
-    setCurrentTheme(currentTheme === darkTheme ? lightTheme : darkTheme);
+    const newTheme = currentTheme === darkTheme ? lightTheme : darkTheme;
+    setCurrentTheme(newTheme);
+    localStorage.setItem('theme', newTheme == darkTheme ? "dark" : "light");
   };
 
   return (
