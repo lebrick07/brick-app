@@ -1,49 +1,71 @@
-import React from 'react';
-import { GoogleLogin } from 'react-google-login';
+import React, { useEffect } from 'react';
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { Box } from '@mui/material';
+import { gapi } from 'gapi-script';
 
-const GoogleLoginButton = ({ onGoogleLoginSuccess, onGoogleLoginFailure }) => {
-  const clientId = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID;
+function GoogleLoginButton() {
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
+        scope: 'email',
+      });
+    }
 
-  const handleGoogleLoginSuccess = (response) => {
-    console.log(response);
-    onGoogleLoginSuccess(response);
+    gapi.load('client:auth2', start);
+  }, []);
+
+  const onSuccess = response => {
+    console.log('SUCCESS', response);
   };
-
-  const handleGoogleLoginFailure = (error) => {
-    console.log(error);
-    onGoogleLoginFailure(error);
+  const onFailure = response => {
+    console.log('FAILED', response);
+  };
+  const onLogoutSuccess = () => {
+    console.log('SUCESS LOG OUT');
   };
 
   return (
-    <GoogleLogin
-      clientId={clientId}
-      render={(renderProps) => (
-        <Box
-          onClick={renderProps.onClick}
-          sx={{
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '0.9rem',
-          }}
-        >
-          SIGN IN
-        </Box>
-      )}
-      onSuccess={handleGoogleLoginSuccess}
-      onFailure={handleGoogleLoginFailure}
-      cookiePolicy={'single_host_origin'}
-      isSignedIn={false}
-    />
+    <div>
+      <GoogleLogin
+        clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}
+        onSuccess={onSuccess}
+        onFailure={onFailure}
+        render={(renderProps) => (
+          <Box
+            onClick={renderProps.onClick}
+            sx={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.9rem',
+            }}
+          >
+            SIGN IN
+          </Box>
+        )}
+      />
+      <GoogleLogout
+        clientId={process.env.REACT_PUBLIC_GOOGLE_CLIENT_ID}
+        onLogoutSuccess={onLogoutSuccess}
+        render={(renderProps) => (
+          <Box
+            onClick={renderProps.onClick}
+            sx={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.9rem',
+            }}
+          >
+            SIGN OUT
+          </Box>
+        )}
+      />
+    </div>
   );
-};
+}
 
-// Add defaultProps to provide default empty functions
-GoogleLoginButton.defaultProps = {
-  onGoogleLoginSuccess: () => {},
-  onGoogleLoginFailure: () => {},
-};
-
-export default GoogleLoginButton;
+export default GoogleLoginButton
