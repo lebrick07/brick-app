@@ -11,7 +11,7 @@ function GoogleLoginButton() {
     function start() {
       gapi.client.init({
         clientId: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
-        scope: 'email',
+        ux_mode: 'redirect',
       })
       const isLoggedStorage = localStorage.getItem('isLoggedIn');
       const loggedUserStorage = localStorage.getItem('loggedUser');
@@ -39,7 +39,6 @@ function GoogleLoginButton() {
   const onLogoutSuccess = () => {
     setIsLoggedIn(false);
     setLoggedUser(null);
-    loggedUser(null);
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.removeItem('loggedUser');
     console.log('SUCCESS LOG OUT');
