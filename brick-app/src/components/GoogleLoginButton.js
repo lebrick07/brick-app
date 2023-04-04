@@ -17,10 +17,9 @@ function GoogleLoginButton() {
         setIsLoggedIn(true);
       }
     }
-  
+
     gapi.load('client:auth2', start);
   }, []);
-    
 
   const onSuccess = response => {
     setIsLoggedIn(true);
@@ -87,3 +86,24 @@ function GoogleLoginButton() {
 }
 
 export default GoogleLoginButton;
+
+export function useGoogleLogin() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
+        ux_mode: 'redirect',
+      });
+      const isLoggedStorage = localStorage.getItem('isLoggedIn');
+      if (isLoggedStorage && isLoggedStorage !== 'false') {
+        setIsLoggedIn(true);
+      }
+    }
+
+    gapi.load('client:auth2', start);
+  }, []);
+
+  return isLoggedIn;
+}

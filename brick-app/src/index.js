@@ -1,13 +1,28 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import CryptoDonations from './components/CryptoDonations';
-import GoogleLoginButton from './components/GoogleLoginButton';
+import GoogleLoginButton, { useGoogleLogin } from './components/GoogleLoginButton';
 import About from './components/pages/About';
 import Contact from './components/pages/Contact';
+import Settings from './components/pages/Settings';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { CssBaseline, Switch, AppBar, Toolbar, IconButton, Typography, Button, Box, Drawer, List, ListItem, ListItemText } from '@mui/material';
+
+import {
+  CssBaseline,
+  Switch,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { purple, grey } from '@mui/material/colors';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -75,6 +90,7 @@ const lightTheme = createTheme({
 });
 
 function MainApp() {
+  const isLoggedIn = useGoogleLogin();
   const [currentTheme, setCurrentTheme] = useState(() => {
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme) {
@@ -123,6 +139,11 @@ function MainApp() {
               <Button color="inherit" href="/contact">
                 Contact
               </Button>
+              {isLoggedIn && (
+                <Button color="inherit" href="/settings">
+                  Settings
+                </Button>
+              )}
               <Button color="inherit">
                 <GoogleLoginButton />
               </Button>
@@ -141,6 +162,11 @@ function MainApp() {
               <ListItem component={Link} to="/contact">
                 <ListItemText primary="Contact" />
               </ListItem>
+              {isLoggedIn && (
+                <ListItem component={Link} to="/settings">
+                  <ListItemText primary="Settings" />
+                </ListItem>
+              )}
               <ListItem>
                 <Button color="inherit">
                   <GoogleLoginButton />
@@ -162,6 +188,7 @@ function MainApp() {
             <Route path="/" element={<App />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            {isLoggedIn && <Route path="/settings" element={<Settings />} />}
           </Routes>
         </Box>
         <footer>
