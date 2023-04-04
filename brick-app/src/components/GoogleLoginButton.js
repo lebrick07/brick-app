@@ -5,26 +5,22 @@ import { gapi } from 'gapi-script';
 
 function GoogleLoginButton() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loggedUser, setLoggedUser] = useState()
 
   useEffect(() => {
     function start() {
       gapi.client.init({
         clientId: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
         ux_mode: 'redirect',
-      })
+      });
       const isLoggedStorage = localStorage.getItem('isLoggedIn');
-      const loggedUserStorage = localStorage.getItem('loggedUser');
       if (isLoggedStorage && isLoggedStorage !== 'false') {
         setIsLoggedIn(true);
       }
-      if (loggedUserStorage) {
-        setLoggedUser(loggedUserStorage)
-      }
     }
-
+  
     gapi.load('client:auth2', start);
   }, []);
+    
 
   const onSuccess = response => {
     setIsLoggedIn(true);
@@ -38,7 +34,6 @@ function GoogleLoginButton() {
   };
   const onLogoutSuccess = () => {
     setIsLoggedIn(false);
-    setLoggedUser(null);
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.removeItem('loggedUser');
     console.log('SUCCESS LOG OUT');
