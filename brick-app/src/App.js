@@ -26,8 +26,7 @@ function App() {
         },
       }}
     >
-      <Typography variant="h2">Ask me anything..</Typography>
-      <br />
+      <Typography variant="h2" sx={{ marginBottom: '20px' }}>Ask me anything</Typography>
       <ToggleButtonGroup
         value={selectedOption}
         exclusive
@@ -38,10 +37,10 @@ function App() {
           Chat
         </ToggleButton>
         <ToggleButton value="image" sx={{ width: '33%' }}>
-          Generate image
+          Text to Image
         </ToggleButton>
         <ToggleButton value="audio" sx={{ width: '33%' }}>
-          Audio transcriber
+          Audio to Text
         </ToggleButton>
       </ToggleButtonGroup>
 
@@ -58,10 +57,12 @@ function App() {
           onResetTrigger={() => setTriggerImageGeneration(false)}
         />
       )}
-      {selectedOption === 'audio' && 
-        <AudioTranscript />}
+      {selectedOption === 'audio' && (
+        <AudioTranscript />
+      )}
     </Box>
   );
 }
 
 export default App;
+
