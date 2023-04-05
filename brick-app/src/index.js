@@ -150,7 +150,7 @@ function MainApp() {
               </ListItem>
               {isLoggedIn && (
                 <ListItem component={Link} to="/settings">
-                  <ListItemText primary="Settings" />
+                  <ListItemText primary="SETTINGS" />
                 </ListItem>
               )}
               <ListItem>
