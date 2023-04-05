@@ -8,21 +8,7 @@ import About from './components/pages/About';
 import Contact from './components/pages/Contact';
 import Settings from './components/pages/Settings';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-
-import {
-  CssBaseline,
-  Switch,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Button,
-  Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-} from '@mui/material';
+import { CssBaseline, Switch, AppBar, Toolbar, IconButton, Typography, Button, Box, Drawer, List, ListItem, ListItemText, } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { purple, grey } from '@mui/material/colors';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -42,7 +28,7 @@ const darkTheme = createTheme({
     },
   },
   components: {
-    MuiLink: {
+    MuiListItem: {
       defaultProps: {
         color: 'primary',
       },
@@ -73,7 +59,7 @@ const lightTheme = createTheme({
     },
   },
   components: {
-    MuiLink: {
+    MuiListItem: {
       defaultProps: {
         color: 'primary',
       },
@@ -154,13 +140,13 @@ function MainApp() {
           <Box sx={{ width: 250 }} role="presentation" onClick={handleNavClose} onKeyDown={handleNavClose}>
             <List>
               <ListItem component={Link} to="/">
-                <ListItemText primary="Home" />
+                <ListItemText primary="HOME" />
               </ListItem>
               <ListItem component={Link} to="/about">
-                <ListItemText primary="About" />
+                <ListItemText primary="ABOUT" />
               </ListItem>
               <ListItem component={Link} to="/contact">
-                <ListItemText primary="Contact" />
+                <ListItemText primary="CONTACT" />
               </ListItem>
               {isLoggedIn && (
                 <ListItem component={Link} to="/settings">
@@ -168,9 +154,7 @@ function MainApp() {
                 </ListItem>
               )}
               <ListItem>
-                <Button color="inherit">
-                  <GoogleLoginButton />
-                </Button>
+                <GoogleLoginButton />
               </ListItem>
             </List>
           </Box>
@@ -214,7 +198,7 @@ function MainApp() {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <MainApp />
+  <MainApp />
 );
 
 reportWebVitals();

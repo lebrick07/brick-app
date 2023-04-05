@@ -53,7 +53,6 @@ function GoogleLoginButton() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '0.9rem',
               }}
             >
               SIGN OUT
@@ -73,7 +72,6 @@ function GoogleLoginButton() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '0.9rem',
               }}
             >
               SIGN IN
