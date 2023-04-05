@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import CryptoDonations from './components/CryptoDonations';
@@ -214,9 +214,7 @@ function MainApp() {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <MainApp />
-  </React.StrictMode>
 );
 
 reportWebVitals();
