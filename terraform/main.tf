@@ -115,14 +115,29 @@ resource "aws_lb" "brick_lb" {
   }
 }
 
+// resource "aws_lb_listener" "brick_lb_listener" {
+//   load_balancer_arn = aws_lb.brick_lb.arn
+//   port = 80
+//   protocol = "HTTP"
+  
+//   default_action {
+//     type = "forward"
+//     target_group_arn = aws_lb_target_group.brick_tg.arn
+//   }
+// }
+
 resource "aws_lb_listener" "brick_lb_listener" {
   load_balancer_arn = aws_lb.brick_lb.arn
   port = 80
   protocol = "HTTP"
   
   default_action {
-    type = "forward"
-    target_group_arn = aws_lb_target_group.brick_tg.arn
+    type = "redirect"
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
