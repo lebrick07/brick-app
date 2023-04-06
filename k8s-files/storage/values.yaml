@@ -2,13 +2,12 @@ architecture: standalone
 replicaCount: 1
 auth:
   enabled: true
-  rootPassword: password
+  rootPassword: Password123!
   username: lebrick
-  password: password
+  password: Password123!
   database: brickbot_db
 livenessProbe:
   initialDelaySeconds: 60
-livenessProbe:
   timeoutSeconds: 10
 resources:
   requests:
@@ -19,5 +18,12 @@ resources:
     cpu: "1"
 persistence:
   storageClassName: "hostpath"
+  enabled: true
+  existingClaim: "hostpath-pvc"
+securityContext:
+  fsGroup: 1001
+  runAsUser: 1001
+# persistence:
+#   storageClassName: "hostpath"
 # persistence:
 #   storageClassName: "aws-ebs-storage-class"

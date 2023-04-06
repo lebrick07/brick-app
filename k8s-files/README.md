@@ -10,6 +10,20 @@ kubectl delete -f deploy-brick.yaml
 ```
 
 ## Installing MongoDB
+
+### Create storage cloass
+If deploying locally use:
+```
+kubectl apply -f hostpath-storage.yaml
+```
+If deploying to AWS use: 
+```
+kubectl apply -f ebs-storage.yaml
+```
+### Create PV and PVC
+```
+kubectl apply -f persistent-vol-claim.yaml
+```
 ### Add bitnami mongodb repo
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
