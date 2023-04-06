@@ -1,5 +1,10 @@
+// variable "ami_id" {
+//     default = "ami-0c85867a12dc216ec"
+//     description = "Ubuntu AMI"
+// }
+
 variable "ami_id" {
-    default = "ami-0c85867a12dc216ec"
+    default = "ami-0557a15b87f6559cf"
     description = "Ubuntu AMI"
 }
 
