@@ -3,7 +3,6 @@
 ```
 kubectl apply -f deploy-brick.yaml
 ```
-
 ### Delete
 ```
 kubectl delete -f deploy-brick.yaml
@@ -14,15 +13,15 @@ kubectl delete -f deploy-brick.yaml
 ### Create storage cloass
 If deploying locally use:
 ```
-kubectl apply -f hostpath-storage.yaml
+kubectl apply -f k8s-files/storage/hostpath-storage.yaml
 ```
 If deploying to AWS use: 
 ```
-kubectl apply -f ebs-storage.yaml
+kubectl apply -f k8s-files/storage/ebs-storage.yaml
 ```
 ### Create PV and PVC
 ```
-kubectl apply -f persistent-vol-claim.yaml
+kubectl apply -f k8s-files/storage/persistent-vol-claim.yaml
 ```
 ### Add bitnami mongodb repo
 ```
