@@ -108,17 +108,6 @@ resource "aws_lb" "brick_lb" {
   }
 }
 
-// resource "aws_lb_listener" "brick_lb_listener" {
-//   load_balancer_arn = aws_lb.brick_lb.arn
-//   port = 80
-//   protocol = "HTTP"
-  
-//   default_action {
-//     type = "forward"
-//     target_group_arn = aws_lb_target_group.brick_tg.arn
-//   }
-// }
-
 resource "aws_lb_listener" "brick_lb_listener" {
   load_balancer_arn = aws_lb.brick_lb.arn
   port = 80
@@ -165,12 +154,6 @@ resource "aws_lb_target_group" "brick_tg" {
     Name = "brick-tg"
   }
 }
-
-// resource "aws_lb_target_group_attachment" "brick_tg_attach" {
-//   target_group_arn = aws_lb_target_group.brick_tg.arn
-//   target_id        = aws_instance.brick_ec2.id
-//   port             = 80
-// }
 
 resource "aws_lb_target_group_attachment" "brick_tg_attach" {
   target_group_arn = aws_lb_target_group.brick_tg.arn
