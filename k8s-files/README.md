@@ -1,9 +1,13 @@
 ## Installing Brickbot UI
 ### Install
+```
 kubectl apply -f deploy-brick.yaml
+```
 
 ### Delete
+```
 kubectl delete -f deploy-brick.yaml
+```
 
 ## Installing MongoDB
 ### Add bitnami mongodb repo
