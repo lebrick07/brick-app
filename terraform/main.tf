@@ -4,13 +4,6 @@ provider "aws" {
 
 resource "aws_security_group" "allow_ssh" {
   name_prefix = "allow_ssh"
-  
-  ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   ingress {
     from_port = 80
@@ -36,6 +29,31 @@ resource "aws_security_group" "allow_ssh" {
   ingress {
     from_port = 31001
     to_port = 31001
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "brick_lb_sg" {
+  name_prefix = "brick_lb_sg"
+  
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 443
+    to_port = 443
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -81,8 +99,9 @@ resource "aws_eip" "brick_eip" {
 resource "aws_lb" "brick_lb" {
   name = var.lb_name
   internal = false
-  load_balancer_type = "network"
+  load_balancer_type = "application"
   subnets = [var.subnet_1, var.subnet_2]
+  security_groups    = [aws_security_group.brick_lb_sg.id]
   
   tags = {
     Name = "brick-lb"
@@ -92,11 +111,15 @@ resource "aws_lb" "brick_lb" {
 resource "aws_lb_listener" "brick_lb_listener" {
   load_balancer_arn = aws_lb.brick_lb.arn
   port = 80
-  protocol = "TCP"
+  protocol = "HTTP"
   
   default_action {
-    type = "forward"
-    target_group_arn = aws_lb_target_group.brick_tg.arn
+    type = "redirect"
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
@@ -116,14 +139,14 @@ resource "aws_lb_listener" "brick_lb_listener_ssl" {
 resource "aws_lb_target_group" "brick_tg" {
   name_prefix = "brk"
   
-  target_type = "instance"
+  target_type = "ip"
   port = 31001
-  protocol = "TCP"
+  protocol = "HTTP"
   
   vpc_id = var.vpc_id
   
   health_check {
-    protocol = "TCP"
+    protocol = "HTTP"
     port = 31001
   }
   
@@ -134,8 +157,8 @@ resource "aws_lb_target_group" "brick_tg" {
 
 resource "aws_lb_target_group_attachment" "brick_tg_attach" {
   target_group_arn = aws_lb_target_group.brick_tg.arn
-  target_id        = aws_instance.brick_ec2.id
-  port             = 80
+  target_id        = aws_instance.brick_ec2.private_ip
+  port             = 31001
 }
 
 data "aws_route53_zone" "brick_r53_zone" {
