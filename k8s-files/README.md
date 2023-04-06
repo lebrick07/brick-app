@@ -30,12 +30,12 @@ helm repo update
 ```
 ### Install MongoDB
 ```
-helm install mongodb bitnami/mongodb --version 13.9.4 -f values.yaml
+helm install mongodb bitnami/mongodb --version 13.9.4 -f k8s-files/storage/values.yaml
 ```
 
 ### Upgrade
 ```
-helm upgrade mongodb bitnami/mongodb --version 13.9.4 -f values.yaml
+helm upgrade mongodb bitnami/mongodb --version 13.9.4 -f k8s-files/storage/values.yaml
 ```
 
 ### Uninstall
