@@ -10,7 +10,7 @@ kubectl delete -f deploy-brick.yaml
 
 ## Installing MongoDB
 
-### Create storage cloass
+### Create storage class
 If deploying locally use:
 ```
 kubectl apply -f k8s-files/storage/hostpath-storage.yaml
