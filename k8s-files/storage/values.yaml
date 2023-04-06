@@ -2,9 +2,9 @@ architecture: standalone
 replicaCount: 1
 auth:
   enabled: true
-  rootPassword: Password123!
+  rootPassword: <YOUR_PASSWORD>
   username: lebrick
-  password: Password123!
+  password: <YOUR_PASSWORD>
   database: brickbot_db
 livenessProbe:
   initialDelaySeconds: 60
