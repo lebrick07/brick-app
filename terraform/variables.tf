@@ -49,12 +49,12 @@ variable "lb_name" {
 }
 
 variable "db_name" {
-    default = "brick-db"
+    default = "brickdb"
     description = "DB name"
 }
 
 variable "db_version" {
-    default = 8
+    default = 5.7
     description = "DB version"
 }
 
@@ -64,7 +64,7 @@ variable "db_instance_class" {
 }
 
 variable "db_username" {
-    default = "brick-user"
+    default = "brickuser"
     description = "DB Username"
 }
 
@@ -74,7 +74,7 @@ variable "db_password" {
 }
 
 variable "db_pg_name" {
-    default = "default.mysql8"
+    default = "default.mysql5.7"
     description = "DB paramater group name"
 }
 

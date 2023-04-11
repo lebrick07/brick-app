@@ -1,3 +1,7 @@
+data "aws_vpc" "selected" {
+  id = var.vpc_id
+}
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -63,6 +67,20 @@ resource "aws_security_group" "brick_lb_sg" {
     to_port = 0
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "brick_db_sg" {
+  name_prefix = "brick_db_sg"
+
+  ingress {
+    from_port = 3306
+    to_port = 3306
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [
+      "${aws_security_group.allow_ssh.id}",
+    ]
   }
 }
 
@@ -193,4 +211,6 @@ resource "aws_db_instance" "default" {
   password             = var.db_password
   parameter_group_name = var.db_pg_name
   skip_final_snapshot  = true
+  publicly_accessible  = true
+  vpc_security_group_ids = [aws_security_group.brick_db_sg.id]
 }
