@@ -12,6 +12,7 @@ import { CssBaseline, Switch, AppBar, Toolbar, IconButton, Typography, Button, B
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { purple, grey } from '@mui/material/colors';
 import MenuIcon from '@mui/icons-material/Menu';
+import Users from './Users';
 
 const darkTheme = createTheme({
   palette: {
@@ -176,6 +177,9 @@ function MainApp() {
           </Routes>
         </Box>
         <footer>
+          <div>
+            <Users />
+            </div>
           <div className="container">
             <div className="footer-container">
               <div className="footer-center" style={{ textAlign: 'center' }}>
