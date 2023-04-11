@@ -48,3 +48,38 @@ variable "lb_name" {
     description = "ALB name"
 }
 
+variable "db_name" {
+    default = "brick-db"
+    description = "DB name"
+}
+
+variable "db_version" {
+    default = 8
+    description = "DB version"
+}
+
+variable "db_instance_class" {
+    default = "db.t3.micro"
+    description = "DB class"
+}
+
+variable "db_username" {
+    default = "brick-user"
+    description = "DB Username"
+}
+
+variable "db_password" {
+    default = "Password123"
+    description = "DB Password"
+}
+
+variable "db_pg_name" {
+    default = "default.mysql8"
+    description = "DB paramater group name"
+}
+
+
+
+
+
+
