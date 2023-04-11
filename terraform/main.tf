@@ -123,12 +123,18 @@ resource "aws_lb_listener" "brick_lb_listener" {
   }
 }
 
+data "aws_acm_certificate" "amazon_issued" {
+  domain      = var.dns_name
+  types       = ["AMAZON_ISSUED"]
+  most_recent = true
+}
+
 resource "aws_lb_listener" "brick_lb_listener_ssl" {
   load_balancer_arn = aws_lb.brick_lb.arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = var.lb_ssl_arn
+  certificate_arn   = data.aws_acm_certificate.amazon_issued.arn
 
   default_action {
     type             = "forward"
@@ -175,4 +181,16 @@ resource "aws_route53_record" "brick_r53_record" {
     zone_id = aws_lb.brick_lb.zone_id
     evaluate_target_health = true
   }
+}
+
+resource "aws_db_instance" "default" {
+  allocated_storage    = 10
+  db_name              = "mydb"
+  engine               = "mysql"
+  engine_version       = "8"
+  instance_class       = "db.t3.micro"
+  username             = "foo"
+  password             = "foobarbaz"
+  parameter_group_name = "default.mysql8"
+  skip_final_snapshot  = true
 }

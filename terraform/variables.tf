@@ -48,8 +48,3 @@ variable "lb_name" {
     description = "ALB name"
 }
 
-variable "lb_ssl_arn" {
-    default = "arn:aws:acm:us-east-1:216026633254:certificate/3b239dcb-0906-41ca-b477-9a912c60cb98"
-    description = "SSL ARN"
-}
-
