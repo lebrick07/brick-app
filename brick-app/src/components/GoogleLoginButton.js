@@ -1,37 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { Box } from '@mui/material';
-import { gapi } from 'gapi-script';
+import jwtDecode from 'jwt-decode';
 
 function GoogleLoginButton() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
-        ux_mode: 'redirect',
-      });
-      const isLoggedStorage = localStorage.getItem('isLoggedIn');
-      if (isLoggedStorage && isLoggedStorage !== 'false') {
-        setIsLoggedIn(true);
-      }
+    const isLoggedStorage = localStorage.getItem('isLoggedIn');
+    if (isLoggedStorage && isLoggedStorage !== 'false') {
+      setIsLoggedIn(true);
     }
-
-    gapi.load('client:auth2', start);
   }, []);
 
   const onSuccess = response => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('loggedUser', response.profileObj.name);
+ 
+    let decoded = jwtDecode(response.credential);
+    // console.log(decoded);
+
+    localStorage.setItem('loggedUser', decoded.name);
     console.log('SUCCESS', response);
     window.location.reload();
   };
+
   const onFailure = response => {
     console.log('FAILED', response);
   };
-  const onLogoutSuccess = () => {
+
+  const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.removeItem('loggedUser');
@@ -42,42 +40,43 @@ function GoogleLoginButton() {
   return (
     <div>
       {isLoggedIn ? (
-        <GoogleLogout
-          clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}
-          onLogoutSuccess={onLogoutSuccess}
-          render={(renderProps) => (
-            <Box
-              onClick={renderProps.onClick}
-              sx={{
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              SIGN OUT
-            </Box>
-          )}
-        />
+        <Box
+          onClick={handleLogout}
+          sx={{
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          SIGN OUT
+        </Box>
       ) : (
-        <GoogleLogin
-          clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}
-          onSuccess={onSuccess}
-          onFailure={onFailure}
-          render={(renderProps) => (
-            <Box
-              onClick={renderProps.onClick}
-              sx={{
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              SIGN IN
-            </Box>
-          )}
-        />
+        <GoogleOAuthProvider
+          clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}>
+          <div>
+            {
+              < GoogleLogin
+                clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}
+                onSuccess={onSuccess}
+                onFailure={onFailure}
+                render={(renderProps) => (
+                  <Box
+                    onClick={renderProps.onClick}
+                    sx={{
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    SIGN IN
+                  </Box>
+                )}
+              />
+            }
+          </div>
+        </GoogleOAuthProvider>
       )}
     </div>
   );
@@ -89,18 +88,10 @@ export function useGoogleLogin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
-        ux_mode: 'redirect',
-      });
-      const isLoggedStorage = localStorage.getItem('isLoggedIn');
-      if (isLoggedStorage && isLoggedStorage !== 'false') {
-        setIsLoggedIn(true);
-      }
+    const isLoggedStorage = localStorage.getItem('isLoggedIn');
+    if (isLoggedStorage && isLoggedStorage !== 'false') {
+      setIsLoggedIn(true);
     }
-
-    gapi.load('client:auth2', start);
   }, []);
 
   return isLoggedIn;

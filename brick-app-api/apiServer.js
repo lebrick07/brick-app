@@ -28,6 +28,7 @@ const server = http.createServer(function (req, res) {
           res.end('Error fetching data from database');
         } else {
           res.setHeader('Content-Type', 'application/json');
+          console.log(JSON.stringify(results));
           res.end(JSON.stringify(results));
         }
       });
