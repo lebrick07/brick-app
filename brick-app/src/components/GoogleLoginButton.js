@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { Box } from '@mui/material';
 import jwtDecode from 'jwt-decode';
+import { addOrGetUser } from '../ApiConnection'
 
 function GoogleLoginButton() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,11 +17,17 @@ function GoogleLoginButton() {
   const onSuccess = response => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
- 
-    let decoded = jwtDecode(response.credential);
-    // console.log(decoded);
 
+    let decoded = jwtDecode(response.credential);
     localStorage.setItem('loggedUser', decoded.name);
+
+    addOrGetUser({
+      name: decoded.name,
+      email: decoded.email,
+      isEmailVerified: decoded.email_verified,
+      clientId: response.clientId,
+    }, () => { console.log('User added/retrieved successfully!'); });
+
     console.log('SUCCESS', response);
     window.location.reload();
   };

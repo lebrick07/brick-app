@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const http = require('http');
-const port = 3001;
 const cors = require('cors');
+const { getAllUsers, addUser } = require('./routes/Users');
 require('dotenv').config();
 
 const connection = mysql.createConnection({
@@ -14,31 +14,39 @@ const connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   console.log('Connected to the database!');
-});
 
-// Create an HTTP server
-const server = http.createServer(function (req, res) {
-  // Enable CORS for all requests
-  cors()(req, res, function () {
-    // Handle GET requests to "/users"
-    if (req.method === 'GET' && req.url === '/users') {
-      connection.query('SELECT * FROM Users', function (err, results, fields) {
-        if (err) {
-          res.statusCode = 500;
-          res.end('Error fetching data from database');
-        } else {
-          res.setHeader('Content-Type', 'application/json');
-          console.log(JSON.stringify(results));
-          res.end(JSON.stringify(results));
-        }
-      });
-    } else {
-      res.statusCode = 404;
-      res.end('Not Found');
-    }
+  // Create an HTTP server
+  const server = http.createServer(function (req, res) {
+    // Enable CORS for all requests
+    cors()(req, res, function () {
+      if (req.method === 'GET' && req.url === '/users') {
+        getAllUsers(req, res, connection);
+      } else if (req.method === 'POST' && req.url === '/addUser') {
+        let body = '';
+        req.on('data', chunk => {
+          body += chunk.toString();
+        });
+        req.on('end', () => {
+          const { name, email, is_email_verified, clientId } = JSON.parse(body);
+          addUser(name, email, is_email_verified, clientId, connection)
+            .then(user => {
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(user));
+            })
+            .catch(error => {
+              console.error('Error adding user:', error);
+              res.statusCode = 500;
+              res.end('Error adding user');
+            });
+        });
+      } else {
+        res.statusCode = 404;
+        res.end('Not Found');
+      }
+    });
   });
-});
 
-server.listen(port, function () {
-  console.log('Server listening on port ' + port);
+  server.listen(process.env.API_PORT, function () {
+    console.log(`Server listening on port ${process.env.API_PORT}`);
+  });
 });
