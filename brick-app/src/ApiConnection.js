@@ -51,6 +51,4 @@ function addOrGetUser({ name, email, isEmailVerified, clientId }, onSuccess) {
         });
 }
 
-
-
 export { getAllUsers, addOrGetUser };
