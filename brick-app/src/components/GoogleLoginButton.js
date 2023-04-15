@@ -14,20 +14,21 @@ function GoogleLoginButton() {
     }
   }, []);
 
-  const onSuccess = response => {
+  const onSuccess = async response => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
 
     let decoded = jwtDecode(response.credential);
     localStorage.setItem('loggedUser', decoded.name);
 
-    addOrGetUser({
+    await addOrGetUser({
       name: decoded.name,
       email: decoded.email,
       isEmailVerified: decoded.email_verified,
     }, () => { console.log('User added/retrieved successfully!'); });
 
     console.log('SUCCESS', response);
+    window.location.reload();
   };
 
   const onFailure = response => {

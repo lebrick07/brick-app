@@ -23,31 +23,36 @@ function getAllUsers() {
     );
 }
 
-function addOrGetUser({ name, email, isEmailVerified }, onSuccess) {
-    const requestOptions = {
+function addOrGetUser({ name, email, isEmailVerified }) {
+    return new Promise((resolve, reject) => {
+      const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            name,
-            email,
-            is_email_verified: isEmailVerified,
+          name,
+          email,
+          is_email_verified: isEmailVerified,
         }),
-    };
-
-    fetch(apiUrl + '/addUser', requestOptions)
+      };
+  
+      fetch(apiUrl + '/addUser', requestOptions)
         .then((response) => response.json())
         .then((data) => {
-            if (data.error) {
-                console.log(data.error);
-            } else {
-                console.log(`User with id ${data.id} added successfully!`);
-                onSuccess();
-            }
+          if (data.error) {
+            console.log(data.error);
+            reject(data.error);
+          } else {
+            console.log(`User with id ${data.id} added/retrieved successfully!`);
+            resolve();
+          }
         })
         .catch((error) => {
-            console.error(error);
-            console.log('Error adding user');
+          console.error(error);
+          console.log('Error adding/retrieving user');
+          reject(error);
         });
-}
+    });
+  }
+  
 
 export { getAllUsers, addOrGetUser };
