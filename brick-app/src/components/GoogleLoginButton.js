@@ -29,7 +29,6 @@ function GoogleLoginButton() {
     }, () => { console.log('User added/retrieved successfully!'); });
 
     console.log('SUCCESS', response);
-    window.location.reload();
   };
 
   const onFailure = response => {

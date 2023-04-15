@@ -1,13 +1,16 @@
 function getAllUsers(req, res, connection) {
-    connection.query('SELECT * FROM Users', function (err, results) {
-        if (err) {
-            res.statusCode = 500;
-            res.end('Error fetching data from database');
-        } else {
-            res.setHeader('Content-Type', 'application/json');
-            console.log(JSON.stringify(results));
-            res.end(JSON.stringify(results));
-        }
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM Users', function (err, results) {
+            if (err) {
+                reject(err);
+            } else {
+                if (results.length > 0) {
+                    resolve(results);
+                } else {
+                    reject();
+                }
+            }
+        });
     });
 }
 

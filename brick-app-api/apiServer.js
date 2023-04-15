@@ -15,13 +15,35 @@ connection.connect(function (err) {
   if (err) throw err;
   console.log('Connected to the database!');
 
-  // Create an HTTP server
   const server = http.createServer(function (req, res) {
-    // Enable CORS for all requests
+    logToConsole("New request:", req.method, req.url);
+
     cors()(req, res, function () {
+      if (req.method === 'OPTIONS') {
+        // handle preflight request
+        res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+        res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        res.setHeader('Access-Control-Max-Age', '86400');
+        res.statusCode = 200;
+        res.end();
+      }
+
+      // GET /users
       if (req.method === 'GET' && req.url === '/users') {
-        getAllUsers(req, res, connection);
-      } else if (req.method === 'POST' && req.url === '/addUser') {
+        logToConsole("Responding to:", req.method, req.url);
+
+        getAllUsers(req, res, connection, headers)
+          .then(resp => {
+            res.end(JSON.stringify(resp));
+          }).catch(error => {
+            logToConsole(`Error getting users. Error: ${error}.`, req.method, req.url);
+            res.statusCode = 500;
+            res.end('Error fetching data from database');
+          });
+      }
+      // POST /addUser
+      else if (req.method === 'POST' && req.url === '/addUser') {
         let body = '';
         req.on('data', chunk => {
           body += chunk.toString();
@@ -30,11 +52,11 @@ connection.connect(function (err) {
           const { name, email, is_email_verified, clientId } = JSON.parse(body);
           addUser(name, email, is_email_verified, clientId, connection)
             .then(user => {
-              res.setHeader('Content-Type', 'application/json');
+              logToConsole("Responding to:", req.method, req.url);
               res.end(JSON.stringify(user));
             })
             .catch(error => {
-              console.error('Error adding user:', error);
+              logToConsole(`Error adding user. Error: ${error}.`, req.method, req.url);
               res.statusCode = 500;
               res.end('Error adding user');
             });
@@ -50,3 +72,8 @@ connection.connect(function (err) {
     console.log(`Server listening on port ${process.env.API_PORT}`);
   });
 });
+
+function logToConsole(message, method, url) {
+  time = new Date().toISOString();
+  console.log(`[${time}] ${message} Method - ${method} URL - ${url}`);
+}
