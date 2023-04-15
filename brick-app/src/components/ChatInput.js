@@ -89,7 +89,6 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const [showChatHistory, setShowChatHistory] = useState(false);
 
   const classes = useStyles();
-  // const chatHistoryRef = useRef(null);
 
   const isCode = (text) => {
     const codeIndicators = ['{', '}', ';', '(', ')', '=', '=>', 'function', 'const', 'let', 'var', 'import', 'export'];
@@ -100,13 +99,16 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Add your API key, model name, and API URL here.
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
     const modelName = process.env.REACT_APP_OPENAI_TEXT_MODEL;
     const apiUrl = process.env.REACT_APP_OPENAI_URL;
 
-    const historyPrompt = chatHistory.map((entry) => `User: ${entry.message}\n ${entry.response}`).join('\n\n');
-    const prompt = `${historyPrompt}\n\nUser: ${message}`;
+    const messages = [];
+    chatHistory.forEach((entry) => {
+      messages.push(entry);
+    });
+    messages.push(addMessage(message, true));
+
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -114,21 +116,23 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        prompt,
-        temperature: 0.5,
-        max_tokens: 2000,
         model: modelName,
+        messages: messages
       }),
     };
 
     try {
       const response = await fetch(apiUrl, requestOptions);
       const data = await response.json();
-      if (data.choices && data.choices.length > 0) {
-        const newResponse = data.choices[0].text;
+      if (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content) {
+        const newResponse = data.choices[0].message.content;
         setResponse(newResponse);
         setError('');
-        setChatHistory((prevHistory) => [...prevHistory, { message, response: newResponse }]);
+        setChatHistory((prevHistory) => [
+          ...prevHistory,
+          addMessage(message, true),
+          addMessage(newResponse, false)
+        ]);
       } else {
         setResponse('');
         setError('Sorry, no response was found.');
@@ -181,14 +185,19 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         <div className={classes.chatHistory}>
           {chatHistory.map((entry, index) => (
             <div key={index} className={classes.chatHistoryEntry}>
-              <p>User: {entry.message}</p>
-              <p>Bot: {entry.response}</p>
+              <p>{entry.role.charAt(0).toUpperCase() + entry.role.slice(1)}: {entry.content}</p>
             </div>
           ))}
         </div>
       )}
     </div>
   );
+}
+
+function addMessage(message, isUser) {
+  return isUser ?
+    { role: "user", content: message } :
+    { role: "assistant", content: message }
 }
 
 export default ChatInput;
