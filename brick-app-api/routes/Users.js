@@ -14,17 +14,17 @@ function getAllUsers(req, res, connection) {
     });
 }
 
-function addUser(name, email, is_email_verified, clientId, connection) {
+function addUser(name, email, is_email_verified, connection) {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT * FROM Users WHERE clientId = ?', [clientId], function (err, results) {
+        connection.query('SELECT * FROM Users WHERE email = ?', [email], function (err, results) {
             if (err) {
                 reject(err);
             } else {
                 if (results.length > 0) {
                     resolve(results[0]);
                 } else {
-                    connection.query('INSERT INTO Users (name, email, is_email_verified, clientId) VALUES (?, ?, ?, ?)',
-                        [name, email, is_email_verified, clientId],
+                    connection.query('INSERT INTO Users (name, email, is_email_verified) VALUES (?, ?, ?)',
+                        [name, email, is_email_verified],
                         function (err, results) {
                             if (err) {
                                 reject(err);
@@ -34,7 +34,6 @@ function addUser(name, email, is_email_verified, clientId, connection) {
                                     name: name,
                                     email: email,
                                     is_email_verified: is_email_verified,
-                                    clientId: clientId,
                                 });
                             }
                         }

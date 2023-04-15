@@ -25,7 +25,6 @@ function GoogleLoginButton() {
       name: decoded.name,
       email: decoded.email,
       isEmailVerified: decoded.email_verified,
-      clientId: response.clientId,
     }, () => { console.log('User added/retrieved successfully!'); });
 
     console.log('SUCCESS', response);

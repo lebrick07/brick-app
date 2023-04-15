@@ -49,8 +49,8 @@ connection.connect(function (err) {
           body += chunk.toString();
         });
         req.on('end', () => {
-          const { name, email, is_email_verified, clientId } = JSON.parse(body);
-          addUser(name, email, is_email_verified, clientId, connection)
+          const { name, email, is_email_verified } = JSON.parse(body);
+          addUser(name, email, is_email_verified, connection)
             .then(user => {
               logToConsole("Responding to:", req.method, req.url);
               res.end(JSON.stringify(user));

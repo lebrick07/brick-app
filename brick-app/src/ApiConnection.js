@@ -23,7 +23,7 @@ function getAllUsers() {
     );
 }
 
-function addOrGetUser({ name, email, isEmailVerified, clientId }, onSuccess) {
+function addOrGetUser({ name, email, isEmailVerified }, onSuccess) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -31,7 +31,6 @@ function addOrGetUser({ name, email, isEmailVerified, clientId }, onSuccess) {
             name,
             email,
             is_email_verified: isEmailVerified,
-            clientId,
         }),
     };
 
