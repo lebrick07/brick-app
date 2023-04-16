@@ -2,6 +2,7 @@ const mysql = require('mysql');
 const http = require('http');
 const cors = require('cors');
 const { getAllUsers, addUser } = require('./routes/Users');
+const { getConversation } = require('./routes/Conversations');
 require('dotenv').config();
 
 const connection = mysql.createConnection({
@@ -17,17 +18,18 @@ connection.connect(function (err) {
 
   const server = http.createServer(function (req, res) {
     logToConsole("New request:", req.method, req.url);
+    lowerUrl = req.url.toLowerCase();
 
     cors()(req, res, function () {
       if (req.method === 'OPTIONS') {
         routeHandler.cors(req, res);
-      }
-
-      if (req.url.toLowerCase().includes("user")) {
-        routeHandler.user(req, res);
-      }
-
-      else {
+      } else if (req.method === 'GET' && lowerUrl === '/getallusers') {
+        routeHandler.getAllUsersPath(req, res);
+      } else if (req.method === 'POST' && lowerUrl === '/adduser') {
+        routeHandler.addUserPath(req, res);
+      } else if (req.method === 'GET' && lowerUrl.startsWith('/getconversation/') && lowerUrl.split('/').length === 3) {
+        routeHandler.getConversationPath(req, res, lowerUrl);
+      } else {
         routeHandler.notFound(req, res);
       }
     });
@@ -53,40 +55,46 @@ const routeHandler = {
     res.statusCode = 200;
     res.end();
   },
-  user: function (req, res) {
-    // GET /users
-    if (req.method === 'GET' && req.url === '/users') {
-      logToConsole("Responding to:", req.method, req.url);
-
-      getAllUsers(req, res, connection)
-        .then(resp => {
-          res.end(JSON.stringify(resp));
-        }).catch(error => {
-          logToConsole(`Error getting users. Error: ${error}.`, req.method, req.url);
+  getAllUsersPath: function (req, res) {
+    getAllUsers(connection)
+      .then(resp => {
+        res.statusCode = 200;
+        res.end(JSON.stringify(resp));
+      }).catch(error => {
+        logToConsole(`Error getting users. Error: ${error}.`, req.method, req.url);
+        res.statusCode = 500;
+        res.end('Error fetching data from database');
+      });
+  },
+  addUserPath: function (req, res) {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      const { name, email, is_email_verified } = JSON.parse(body);
+      addUser(name, email, is_email_verified, connection)
+        .then(user => {
+          res.end(JSON.stringify(user));
+        })
+        .catch(error => {
+          logToConsole(`Error adding user. Error: ${error}.`, req.method, req.url);
           res.statusCode = 500;
-          res.end('Error fetching data from database');
+          res.end('Error adding user');
         });
-    }
-    // POST /addUser
-    else if (req.method === 'POST' && req.url === '/addUser') {
-      let body = '';
-      req.on('data', chunk => {
-        body += chunk.toString();
+    });
+  },
+  getConversationPath: function (req, res) {
+    const conversationId = lowerUrl.split('/')[2];
+
+    getConversation(conversationId, connection)
+      .then(resp => {
+        res.end(JSON.stringify(resp));
+      }).catch(error => {
+        logToConsole(`Error getting conversation. Error: ${error}.`, req.method, req.url);
+        res.statusCode = 500;
+        res.end('Error fetching data from database');
       });
-      req.on('end', () => {
-        const { name, email, is_email_verified } = JSON.parse(body);
-        addUser(name, email, is_email_verified, connection)
-          .then(user => {
-            logToConsole("Responding to:", req.method, req.url);
-            res.end(JSON.stringify(user));
-          })
-          .catch(error => {
-            logToConsole(`Error adding user. Error: ${error}.`, req.method, req.url);
-            res.statusCode = 500;
-            res.end('Error adding user');
-          });
-      });
-    }
   },
   notFound: function (req, res) {
     // Invalid path

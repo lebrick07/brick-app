@@ -1,4 +1,4 @@
-function getAllUsers(req, res, connection) {
+function getAllUsers(connection) {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM Users', function (err, results) {
             if (err) {

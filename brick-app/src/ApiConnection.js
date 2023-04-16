@@ -5,7 +5,7 @@ function getAllUsers() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        fetch(apiUrl + '/users')
+        fetch(apiUrl + '/getAllUsers')
             .then(response => response.json())
             .then(data => setUsers(data))
             .catch(error => console.error(error));
