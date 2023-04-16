@@ -2,7 +2,8 @@ const mysql = require('mysql');
 const http = require('http');
 const cors = require('cors');
 const { getAllUsers, addUser } = require('./routes/Users');
-const { getConversation } = require('./routes/Conversations');
+const { getConversationsForUser } = require('./routes/Conversations');
+const { getMessagesForConversation } = require('./routes/Messages');
 require('dotenv').config();
 
 const connection = mysql.createConnection({
@@ -27,8 +28,10 @@ connection.connect(function (err) {
         routeHandler.getAllUsersPath(req, res);
       } else if (req.method === 'POST' && lowerUrl === '/adduser') {
         routeHandler.addUserPath(req, res);
-      } else if (req.method === 'GET' && lowerUrl.startsWith('/getconversation/') && lowerUrl.split('/').length === 3) {
-        routeHandler.getConversationPath(req, res, lowerUrl);
+      } else if (req.method === 'GET' && lowerUrl.startsWith('/getconversationsforuser/') && lowerUrl.split('/').length === 3) {
+        routeHandler.getConversationsForUserPath(req, res);
+      } else if (req.method === 'GET' && lowerUrl.startsWith('/getmessagesforconversation/') && lowerUrl.split('/').length === 3) {
+        routeHandler.getMessagesForConversation(req, res);
       } else {
         routeHandler.notFound(req, res);
       }
@@ -84,14 +87,26 @@ const routeHandler = {
         });
     });
   },
-  getConversationPath: function (req, res) {
-    const conversationId = lowerUrl.split('/')[2];
+  getConversationsForUserPath: function (req, res) {
+    const userId = lowerUrl.split('/')[2];
 
-    getConversation(conversationId, connection)
+    getConversationsForUser(userId, connection)
       .then(resp => {
         res.end(JSON.stringify(resp));
       }).catch(error => {
         logToConsole(`Error getting conversation. Error: ${error}.`, req.method, req.url);
+        res.statusCode = 500;
+        res.end('Error fetching data from database');
+      });
+  },
+  getMessagesForConversation: function (req, res) {
+    const conversationId = lowerUrl.split('/')[2];
+
+    getMessagesForConversation(conversationId, connection)
+      .then(resp => {
+        res.end(JSON.stringify(resp));
+      }).catch(error => {
+        logToConsole(`Error getting messages. Error: ${error}.`, req.method, req.url);
         res.statusCode = 500;
         res.end('Error fetching data from database');
       });
