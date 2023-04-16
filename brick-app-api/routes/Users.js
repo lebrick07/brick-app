@@ -45,5 +45,4 @@ function addUser(name, email, is_email_verified, connection) {
     });
 }
 
-
 module.exports = { getAllUsers, addUser };

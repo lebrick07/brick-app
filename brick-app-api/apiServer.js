@@ -20,50 +20,15 @@ connection.connect(function (err) {
 
     cors()(req, res, function () {
       if (req.method === 'OPTIONS') {
-        // handle preflight request
-        res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-        res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-        res.setHeader('Access-Control-Max-Age', '86400');
-        res.statusCode = 200;
-        res.end();
+        routeHandler.cors(req, res);
       }
 
-      // GET /users
-      if (req.method === 'GET' && req.url === '/users') {
-        logToConsole("Responding to:", req.method, req.url);
-
-        getAllUsers(req, res, connection, headers)
-          .then(resp => {
-            res.end(JSON.stringify(resp));
-          }).catch(error => {
-            logToConsole(`Error getting users. Error: ${error}.`, req.method, req.url);
-            res.statusCode = 500;
-            res.end('Error fetching data from database');
-          });
+      if (req.url.toLowerCase().includes("user")) {
+        routeHandler.user(req, res);
       }
-      // POST /addUser
-      else if (req.method === 'POST' && req.url === '/addUser') {
-        let body = '';
-        req.on('data', chunk => {
-          body += chunk.toString();
-        });
-        req.on('end', () => {
-          const { name, email, is_email_verified } = JSON.parse(body);
-          addUser(name, email, is_email_verified, connection)
-            .then(user => {
-              logToConsole("Responding to:", req.method, req.url);
-              res.end(JSON.stringify(user));
-            })
-            .catch(error => {
-              logToConsole(`Error adding user. Error: ${error}.`, req.method, req.url);
-              res.statusCode = 500;
-              res.end('Error adding user');
-            });
-        });
-      } else {
-        res.statusCode = 404;
-        res.end('Not Found');
+
+      else {
+        routeHandler.notFound(req, res);
       }
     });
   });
@@ -76,4 +41,56 @@ connection.connect(function (err) {
 function logToConsole(message, method, url) {
   time = new Date().toISOString();
   console.log(`[${time}] ${message} Method - ${method} URL - ${url}`);
+}
+
+const routeHandler = {
+  cors: function (req, res) {
+    // handle preflight request
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Max-Age', '86400');
+    res.statusCode = 200;
+    res.end();
+  },
+  user: function (req, res) {
+    // GET /users
+    if (req.method === 'GET' && req.url === '/users') {
+      logToConsole("Responding to:", req.method, req.url);
+
+      getAllUsers(req, res, connection)
+        .then(resp => {
+          res.end(JSON.stringify(resp));
+        }).catch(error => {
+          logToConsole(`Error getting users. Error: ${error}.`, req.method, req.url);
+          res.statusCode = 500;
+          res.end('Error fetching data from database');
+        });
+    }
+    // POST /addUser
+    else if (req.method === 'POST' && req.url === '/addUser') {
+      let body = '';
+      req.on('data', chunk => {
+        body += chunk.toString();
+      });
+      req.on('end', () => {
+        const { name, email, is_email_verified } = JSON.parse(body);
+        addUser(name, email, is_email_verified, connection)
+          .then(user => {
+            logToConsole("Responding to:", req.method, req.url);
+            res.end(JSON.stringify(user));
+          })
+          .catch(error => {
+            logToConsole(`Error adding user. Error: ${error}.`, req.method, req.url);
+            res.statusCode = 500;
+            res.end('Error adding user');
+          });
+      });
+    }
+  },
+  notFound: function (req, res) {
+    // Invalid path
+    res.statusCode = 404;
+    res.end('Not Found');
+  }
 }
