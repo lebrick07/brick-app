@@ -43,7 +43,7 @@ function addOrGetUser({ name, email, isEmailVerified }) {
           reject(data.error);
         } else {
           console.log(`User with id ${data.id} added/retrieved successfully!`);
-          resolve();
+          resolve(data.id);
         }
       })
       .catch((error) => {
@@ -98,4 +98,35 @@ function getMessages({ conversationId }) {
   );
 }
 
-export { getAllUsers, addOrGetUser, getConversations, getMessages };
+function addOrGetSession({ sessionId, expires, data }) {
+  return new Promise((resolve, reject) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId,
+        expires,
+        data,
+      }),
+    };
+
+    fetch(apiUrl + '/addSession', requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          reject(data.error);
+        } else {
+          console.log(`Session with id ${data.sessionId} added/retrieved successfully!`);
+          resolve(data.sessionId);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        console.log('Error adding/retrieving user');
+        reject(error);
+      });
+  });
+}
+
+export { getAllUsers, addOrGetUser, getConversations, getMessages, addOrGetSession };

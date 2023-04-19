@@ -21,11 +21,13 @@ function GoogleLoginButton() {
     let decoded = jwtDecode(response.credential);
     localStorage.setItem('loggedUser', decoded.name);
 
-    await addOrGetUser({
-      name: decoded.name,
-      email: decoded.email,
-      isEmailVerified: decoded.email_verified,
-    }, () => { console.log('User added/retrieved successfully!'); });
+    await addOrGetUser({ name: decoded.name, email: decoded.email, isEmailVerified: decoded.email_verified })
+      .then((userId) => {
+        console.log(`User with ID: ${userId} added/retrieved successfully`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
     console.log('SUCCESS', response);
     window.location.reload();
@@ -90,7 +92,7 @@ function GoogleLoginButton() {
 
 export default GoogleLoginButton;
 
-export function useGoogleLogin() {
+export function isGoogleLoggedIn() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {

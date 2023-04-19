@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import CryptoDonations from './components/CryptoDonations';
-import GoogleLoginButton, { useGoogleLogin } from './components/GoogleLoginButton';
+import GoogleLoginButton, { isGoogleLoggedIn } from './components/GoogleLoginButton';
 import About from './components/pages/About';
 import Contact from './components/pages/Contact';
 import Settings from './components/pages/Settings';
@@ -76,7 +76,7 @@ const lightTheme = createTheme({
 });
 
 function MainApp() {
-  const isLoggedIn = useGoogleLogin();
+  const isLoggedIn = isGoogleLoggedIn();
   const [currentTheme, setCurrentTheme] = useState(() => {
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme) {

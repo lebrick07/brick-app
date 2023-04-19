@@ -4,6 +4,7 @@ const cors = require('cors');
 const { getAllUsers, addUser } = require('./routes/Users');
 const { getConversationsForUser } = require('./routes/Conversations');
 const { getMessagesForConversation } = require('./routes/Messages');
+const { addSession } = require('./routes/Sessions');
 require('dotenv').config();
 
 const connection = mysql.createConnection({
@@ -32,6 +33,8 @@ connection.connect(function (err) {
         routeHandler.getConversationsForUserPath(req, res);
       } else if (req.method === 'GET' && lowerUrl.startsWith('/getmessagesforconversation/') && lowerUrl.split('/').length === 3) {
         routeHandler.getMessagesForConversation(req, res);
+      } else if (req.method === 'POST' && lowerUrl === '/addsession') {
+        routeHandler.addSessionPath(req, res);
       } else {
         routeHandler.notFound(req, res);
       }
@@ -107,6 +110,17 @@ const routeHandler = {
         res.end(JSON.stringify(resp));
       }).catch(error => {
         logToConsole(`Error getting messages. Error: ${error}.`, req.method, req.url);
+        res.statusCode = 500;
+        res.end('Error fetching data from database');
+      });
+  },
+  addSessionPath: function (req, res) {
+    addSession(connection)
+      .then(resp => {
+        res.statusCode = 200;
+        res.end(JSON.stringify(resp));
+      }).catch(error => {
+        logToConsole(`Error getting session. Error: ${error}.`, req.method, req.url);
         res.statusCode = 500;
         res.end('Error fetching data from database');
       });
