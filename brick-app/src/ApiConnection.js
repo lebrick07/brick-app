@@ -118,7 +118,7 @@ function addOrGetSession({ sessionId, expires, data }) {
           reject(data.error);
         } else {
           console.log(`Session with id ${data.sessionId} added/retrieved successfully!`);
-          resolve(data.sessionId);
+          resolve();
         }
       })
       .catch((error) => {

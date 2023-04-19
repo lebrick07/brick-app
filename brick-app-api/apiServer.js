@@ -115,15 +115,22 @@ const routeHandler = {
       });
   },
   addSessionPath: function (req, res) {
-    addSession(connection)
-      .then(resp => {
-        res.statusCode = 200;
-        res.end(JSON.stringify(resp));
-      }).catch(error => {
-        logToConsole(`Error getting session. Error: ${error}.`, req.method, req.url);
-        res.statusCode = 500;
-        res.end('Error fetching data from database');
-      });
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      const { sessionId, expires, data } = JSON.parse(body);
+      addSession(sessionId, expires, data, connection)
+        .then(resp => {
+          res.statusCode = 200;
+          res.end(JSON.stringify(resp));
+        }).catch(error => {
+          logToConsole(`Error getting session. Error: ${error}.`, req.method, req.url);
+          res.statusCode = 500;
+          res.end('Error fetching data from database');
+        });
+    });
   },
   notFound: function (req, res) {
     // Invalid path
