@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
+import { getConversations } from '../ApiConnection';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -87,6 +88,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const [error, setError] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [showChatHistory, setShowChatHistory] = useState(false);
+  const [conversations, setConversations] = useState([]);
 
   const classes = useStyles();
 
@@ -149,6 +151,17 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
     setShowChatHistory((prevShow) => !prevShow);
   };
 
+  const handleGetConversations = () => {
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (session && session.id !== '') {
+      getConversations(session.id).then((data) => {
+        setConversations(data);
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
+  };
+
   return (
     <div className={classes.container}>
       <form onSubmit={handleSubmit}>
@@ -190,6 +203,12 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
           ))}
         </div>
       )}
+      <div>
+        <button onClick={handleGetConversations}>Get conversations</button>
+        {conversations.map((conversation, index) => (
+          <div key={index}>{conversation}</div>
+        ))}
+      </div>
     </div>
   );
 }

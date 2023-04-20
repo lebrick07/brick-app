@@ -1,39 +1,9 @@
 import React, { useState, useEffect } from 'react';
 const apiUrl = process.env.REACT_APP_API_IP_ADDRESS + ':' + process.env.REACT_APP_API_PORT;
 
-function getAllUsers() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    fetch(`${apiUrl}/getAllUsers`)
-      .then(response => response.json())
-      .then(data => setUsers(data))
-      .catch(error => console.error(error));
-  }, []);
-
-  return (
-    <div>
-      <h1>Users</h1>
-      <ul>
-        {users.map(user => (
-          <li key={user.id}>{user.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 function addOrGetUser({ name, email, isEmailVerified }) {
   return new Promise((resolve, reject) => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name,
-        email,
-        is_email_verified: isEmailVerified,
-      }),
-    };
+    const requestOptions = getRequestOptions({ name, email, isEmailVerified });
 
     fetch(apiUrl + '/addUser', requestOptions)
       .then((response) => response.json())
@@ -54,27 +24,24 @@ function addOrGetUser({ name, email, isEmailVerified }) {
   });
 }
 
-function getConversations({ userId }) {
-  const [conversations, setConversations] = useState([]);
-
-  useEffect(() => {
-    fetch(`${apiUrl}/getConversationsForUser/${userId}`)
-      .then(response => response.json())
-      .then(data => setConversations(data))
-      .catch(error => console.error(error));
-  }, []);
-
-  return (
-    <div>
-      <h1>Conversations</h1>
-      <ul>
-        {conversations.map(conversation => (
-          <li key={conversation.id}>{conversation.topic}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+function getConversations(userSessionId) {
+  return new Promise((resolve, reject) => {
+    fetch(`${apiUrl}/getConvoForUserSession/${userSessionId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          reject(data.error);
+        } else {
+          resolve(data.id);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+};
 
 function getMessages({ conversationId }) {
   const [messages, setMessages] = useState([]);
@@ -98,17 +65,9 @@ function getMessages({ conversationId }) {
   );
 }
 
-function addOrGetSession({ sessionId, expires, data }) {
+function addOrGetSession({ id, expires, data }) {
   return new Promise((resolve, reject) => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId,
-        expires,
-        data,
-      }),
-    };
+    const requestOptions = getRequestOptions({ id, expires, data });
 
     fetch(apiUrl + '/addSession', requestOptions)
       .then((response) => response.json())
@@ -117,7 +76,6 @@ function addOrGetSession({ sessionId, expires, data }) {
           console.log(data.error);
           reject(data.error);
         } else {
-          console.log(`Session with id ${data.sessionId} added/retrieved successfully!`);
           resolve();
         }
       })
@@ -129,4 +87,12 @@ function addOrGetSession({ sessionId, expires, data }) {
   });
 }
 
-export { getAllUsers, addOrGetUser, getConversations, getMessages, addOrGetSession };
+function getRequestOptions(body) {
+  return {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  };
+}
+
+export { addOrGetUser, getConversations, getMessages, addOrGetSession };

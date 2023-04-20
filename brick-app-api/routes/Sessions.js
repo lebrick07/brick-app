@@ -4,9 +4,8 @@ function addSession(sessionId, expires, data, connection) {
             if (err) {
                 reject(err);
             } else {
-                if (results.length > 0) {
-                    resolve(results[0]);
-                } else {
+                if (results.length === 0 ||
+                    (results.length > 0 && results[0].expires < Date.now())) {
                     connection.query('INSERT INTO Sessions (session_id, expires, data) VALUES (?, ?, ?)',
                         [sessionId, expires, data],
                         function (err, results) {
@@ -21,6 +20,8 @@ function addSession(sessionId, expires, data, connection) {
                             }
                         }
                     );
+                } else {
+                    resolve(results[0]);
                 }
             }
         }

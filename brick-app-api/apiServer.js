@@ -29,10 +29,11 @@ connection.connect(function (err) {
         routeHandler.getAllUsersPath(req, res);
       } else if (req.method === 'POST' && lowerUrl === '/adduser') {
         routeHandler.addUserPath(req, res);
-      } else if (req.method === 'GET' && lowerUrl.startsWith('/getconversationsforuser/') && lowerUrl.split('/').length === 3) {
-        routeHandler.getConversationsForUserPath(req, res);
+        // TODO: Find a better solution for this. This can be exploited
+      } else if (req.method === 'GET' && lowerUrl.startsWith('/getconvoforusersession/') && lowerUrl.split('/').length === 3) {
+        routeHandler.getConvoForUserSession(req, res);
       } else if (req.method === 'GET' && lowerUrl.startsWith('/getmessagesforconversation/') && lowerUrl.split('/').length === 3) {
-        routeHandler.getMessagesForConversation(req, res);
+        routeHandler.getMessagesForConversationPath(req, res);
       } else if (req.method === 'POST' && lowerUrl === '/addsession') {
         routeHandler.addSessionPath(req, res);
       } else {
@@ -90,10 +91,10 @@ const routeHandler = {
         });
     });
   },
-  getConversationsForUserPath: function (req, res) {
-    const userId = lowerUrl.split('/')[2];
+  getConvoForUserSession: function (req, res) {
+    const sessionId = lowerUrl.split('/')[2];
 
-    getConversationsForUser(userId, connection)
+    getConversationsForUser(sessionId, connection)
       .then(resp => {
         res.end(JSON.stringify(resp));
       }).catch(error => {
@@ -102,7 +103,7 @@ const routeHandler = {
         res.end('Error fetching data from database');
       });
   },
-  getMessagesForConversation: function (req, res) {
+  getMessagesForConversationPath: function (req, res) {
     const conversationId = lowerUrl.split('/')[2];
 
     getMessagesForConversation(conversationId, connection)
@@ -120,8 +121,8 @@ const routeHandler = {
       body += chunk.toString();
     });
     req.on('end', () => {
-      const { sessionId, expires, data } = JSON.parse(body);
-      addSession(sessionId, expires, data, connection)
+      const { id, expires, data } = JSON.parse(body);
+      addSession(id, expires, data, connection)
         .then(resp => {
           res.statusCode = 200;
           res.end(JSON.stringify(resp));

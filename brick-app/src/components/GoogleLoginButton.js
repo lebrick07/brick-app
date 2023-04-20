@@ -23,16 +23,21 @@ function GoogleLoginButton() {
       email: decoded.email,
       isEmailVerified: decoded.email_verified
     }).then(async (userId) => {
-      console.log(`User with ID: ${userId} added/retrieved successfully`);
+      // Create a 24 hours expiration token
       const currSession = { id: sessionId, userName: decoded.name };
 
+      const timestamp = Date.now() + 24 * 60 * 60 * 1000; // current timestamp plus 24 hours in milliseconds
+      const formattedDate = new Date(timestamp).toISOString().slice(0, 19).replace('T', ' ');
+
       await addOrGetSession({
-        sessionId: currSession.id,
-        expires: new Date().getTime(),
+        id: currSession.id,
+        expires: formattedDate,
         data: JSON.stringify({ user_id: userId })
       }).then(() => {
         setSession(currSession);
         localStorage.setItem('session', JSON.stringify(currSession));
+
+        addOrGetSession({ id: currSession.id, expires: formattedDate, data: JSON.stringify({ user_id: userId }) });
       }).catch((error) => {
         console.error(error);
       });
