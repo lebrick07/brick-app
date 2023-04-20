@@ -36,8 +36,6 @@ function GoogleLoginButton() {
       }).then(() => {
         setSession(currSession);
         localStorage.setItem('session', JSON.stringify(currSession));
-
-        addOrGetSession({ id: currSession.id, expires: formattedDate, data: JSON.stringify({ user_id: userId }) });
       }).catch((error) => {
         console.error(error);
       });

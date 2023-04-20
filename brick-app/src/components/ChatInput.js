@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import { getConversations } from '../ApiConnection';
+import { getConversations, getMessages } from '../ApiConnection';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -89,6 +89,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const [chatHistory, setChatHistory] = useState([]);
   const [showChatHistory, setShowChatHistory] = useState(false);
   const [conversations, setConversations] = useState([]);
+  const [conversationMessages, setConversationMessages] = useState([]);
 
   const classes = useStyles();
 
@@ -154,13 +155,25 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const handleGetConversations = () => {
     const session = JSON.parse(localStorage.getItem('session'));
     if (session && session.id !== '') {
-      getConversations(session.id).then((data) => {
-        setConversations(data);
-      }).catch((error) => {
-        console.error(error);
-      });
+      getConversations(session.id)
+        .then((data) => {
+          setConversations(data);
+        }).catch((error) => {
+          console.error(error);
+        });
     }
   };
+
+  const handleGetConversationMessages = (conversation) => {
+    if (conversation && conversation.id) {
+      getMessages(conversation.id)
+        .then((data) => {
+          setConversationMessages({conv: conversation, messages: data});
+        }).catch((error) => {
+          console.error(error);
+        });
+    }
+  }
 
   return (
     <div className={classes.container}>
@@ -206,8 +219,18 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
       <div>
         <button onClick={handleGetConversations}>Get conversations</button>
         {conversations.map((conversation, index) => (
-          <div key={index}>{conversation}</div>
+          <button key={index} onClick={() => handleGetConversationMessages(conversation)}>
+            {conversation.topic}
+          </button>
         ))}
+        {conversationMessages && conversationMessages.messages && (
+          <div>
+            <h2>{conversationMessages.conv.topic}</h2>
+            {conversationMessages.messages.map((msg, index) => (
+              <div key={index}><p>{msg.message}</p></div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
