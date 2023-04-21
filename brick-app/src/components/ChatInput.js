@@ -168,7 +168,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
     if (conversation && conversation.id) {
       getMessages(conversation.id)
         .then((data) => {
-          setConversationMessages({conv: conversation, messages: data});
+          setConversationMessages({ conv: conversation, messages: data });
         }).catch((error) => {
           console.error(error);
         });
@@ -227,7 +227,9 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
           <div>
             <h2>{conversationMessages.conv.topic}</h2>
             {conversationMessages.messages.map((msg, index) => (
-              <div key={index}><p>{msg.message}</p></div>
+              <div key={index}>
+                <p>{msg.role}: {msg.content}</p>
+              </div>
             ))}
           </div>
         )}

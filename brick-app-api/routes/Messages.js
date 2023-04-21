@@ -1,6 +1,6 @@
 function getMessagesForConversation(convId, connection) {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT id, message, conversation_id FROM Messages WHERE conversation_id = ?', [convId], function (err, results) {
+        connection.query('SELECT id, role, content, conversation_id FROM Messages WHERE conversation_id = ?', [convId], function (err, results) {
             if (err) {
                 reject(err);
             } else {
