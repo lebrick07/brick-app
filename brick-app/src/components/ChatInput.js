@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import { getConversations, getMessages, addMessageToConversation } from '../ApiConnection';
+import { getConversations, getMessages, addMessageToConversation, addConversation } from '../ApiConnection';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -135,12 +135,22 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         // If session isn't found, it means that the user isn't logged in
         const session = JSON.parse(localStorage.getItem('session'));
         if (session && session.id !== '') {
-          // User is logged in but they just started a new conversation that isn't saved yet
+          // User is logged in and picked a conversation to continue
           if (currentConversation.id !== '') {
             await addMessageToConversation({ userSessionId: session.id, conversationId: currentConversation.id, content: userMessage.content, role: userMessage.role });
             await addMessageToConversation({ userSessionId: session.id, conversationId: currentConversation.id, content: assistantResponse.content, role: assistantResponse.role });
           } else {
-
+            // TODO: Generate from the Chat response
+            var convTopic = 'No topic yet';
+            await addConversation({ userSessionId: session.id, topic: convTopic })
+              .then(async (data) => {
+                await addMessageToConversation({ userSessionId: session.id, conversationId: data, content: userMessage.content, role: userMessage.role });
+                await addMessageToConversation({ userSessionId: session.id, conversationId: data, content: assistantResponse.content, role: assistantResponse.role });
+                setCurrentConversation({ id: data, name: convTopic });
+                handleGetConversations();
+              }).catch((error) => {
+                console.error(error);
+              });
           }
         }
 

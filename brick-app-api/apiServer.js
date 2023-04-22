@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const http = require('http');
 const cors = require('cors');
 const { getAllUsers, addUser } = require('./routes/Users');
-const { getConversationsForUser } = require('./routes/Conversations');
+const { getConversationsForUser, addConversation } = require('./routes/Conversations');
 const { getMessagesForConversation, addMessageToConversation } = require('./routes/Messages');
 const { addSession } = require('./routes/Sessions');
 require('dotenv').config();
@@ -36,6 +36,8 @@ connection.connect(function (err) {
         routeHandler.addSessionPath(req, res);
       } else if (req.method === 'POST' && lowerUrl === '/addmessagetoconversation') {
         routeHandler.addMessageToConversationPath(req, res);
+      } else if (req.method === 'POST' && lowerUrl === '/addconversation') {
+        routeHandler.addConversationPath(req, res);
       } else {
         routeHandler.notFound(req, res);
       }
@@ -98,6 +100,7 @@ const routeHandler = {
 
     getMessagesForConversation(sessionId, conversationId, connection)
       .then(resp => {
+        res.statusCode = 200;
         res.end(JSON.stringify(resp));
       }).catch(error => {
         logToConsole(`Error getting messages. Error: ${error}.`, req.method, req.url);
@@ -136,6 +139,24 @@ const routeHandler = {
           res.end();
         }).catch(error => {
           logToConsole(`Error getting session. Error: ${error}.`, req.method, req.url);
+          res.statusCode = 500;
+          res.end('Error fetching data from database');
+        });
+    });
+  },
+  addConversationPath: function (req, res) {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      const { userSessionId, topic } = JSON.parse(body);
+      addConversation(userSessionId, topic, connection)
+        .then(resp => {
+          res.statusCode = 200;
+          res.end(JSON.stringify(resp));
+        }).catch(error => {
+          logToConsole(`Error adding conversation. Error: ${error}.`, req.method, req.url);
           res.statusCode = 500;
           res.end('Error fetching data from database');
         });

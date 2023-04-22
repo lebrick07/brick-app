@@ -15,4 +15,34 @@ function getConversationsForUser(sessionId, connection) {
     });
 }
 
-module.exports = { getConversationsForUser };
+function addConversation(sessionId, topic, connection) {
+    return new Promise((resolve, reject) => {
+        query = 'INSERT INTO Conversations (topic, user_id) VALUES(?, (SELECT JSON_EXTRACT(data, \'$.user_id\') as user_id FROM Sessions s WHERE session_id = ?))';
+        connection.query(query, [topic, sessionId], function (err, response) {
+            if (err) {
+                reject(err);
+            } else {
+                if (!response || response.affectedRows !== 1) {
+                    reject();
+                }
+                else {
+                    query = 'SELECT LAST_INSERT_ID();';
+                    connection.query(query, [], function (err, response) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            if (response && response.length > 0 && response[0]['LAST_INSERT_ID()']) {
+                                resolve(response[0]['LAST_INSERT_ID()']);
+                            } else {
+                                reject();
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
+    });
+}
+
+module.exports = { getConversationsForUser, addConversation };

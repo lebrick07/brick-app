@@ -61,7 +61,7 @@ function getMessages(userSessionId, conversationId) {
   });
 }
 
-function addMessageToConversation({userSessionId, conversationId, content, role}) {
+function addMessageToConversation({ userSessionId, conversationId, content, role }) {
   return new Promise((resolve, reject) => {
     const requestOptions = getRequestOptions({ userSessionId, conversationId, content, role });
 
@@ -72,6 +72,28 @@ function addMessageToConversation({userSessionId, conversationId, content, role}
           reject(data.error);
         } else {
           resolve();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        console.log('Error adding/retrieving user');
+        reject(error);
+      });
+  });
+}
+
+function addConversation({ userSessionId, topic }) {
+  return new Promise((resolve, reject) => {
+    const requestOptions = getRequestOptions({ userSessionId, topic });
+
+    fetch(apiUrl + '/addConversation', requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          reject(data.error);
+        } else {
+          resolve(data);
         }
       })
       .catch((error) => {
@@ -112,4 +134,4 @@ function getRequestOptions(body) {
   };
 }
 
-export { addOrGetUser, getConversations, getMessages, addOrGetSession, addMessageToConversation };
+export { addOrGetUser, getConversations, getMessages, addOrGetSession, addMessageToConversation, addConversation };
