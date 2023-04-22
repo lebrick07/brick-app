@@ -1,19 +1,3 @@
-function getAllUsers(connection) {
-    return new Promise((resolve, reject) => {
-        connection.query('SELECT id, name, email, is_email_verified FROM brickdb.Users', function (err, results) {
-            if (err) {
-                reject(err);
-            } else {
-                if (results.length > 0) {
-                    resolve(results);
-                } else {
-                    reject();
-                }
-            }
-        });
-    });
-}
-
 function addUser(name, email, is_email_verified, connection) {
     return new Promise((resolve, reject) => {
         connection.query('SELECT id, name, email, is_email_verified FROM Users WHERE email = ?', [email], function (err, results) {
@@ -45,4 +29,4 @@ function addUser(name, email, is_email_verified, connection) {
     });
 }
 
-module.exports = { getAllUsers, addUser };
+module.exports = { addUser };

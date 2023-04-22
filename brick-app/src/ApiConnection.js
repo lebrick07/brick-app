@@ -61,6 +61,27 @@ function getMessages(userSessionId, conversationId) {
   });
 }
 
+function addMessageToConversation({userSessionId, conversationId, content, role}) {
+  return new Promise((resolve, reject) => {
+    const requestOptions = getRequestOptions({ userSessionId, conversationId, content, role });
+
+    fetch(apiUrl + '/addMessageToConversation', requestOptions)
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          reject(data.error);
+        } else {
+          resolve();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        console.log('Error adding/retrieving user');
+        reject(error);
+      });
+  });
+}
+
 function addOrGetSession({ id, expires, data }) {
   return new Promise((resolve, reject) => {
     const requestOptions = getRequestOptions({ id, expires, data });
@@ -91,4 +112,4 @@ function getRequestOptions(body) {
   };
 }
 
-export { addOrGetUser, getConversations, getMessages, addOrGetSession };
+export { addOrGetUser, getConversations, getMessages, addOrGetSession, addMessageToConversation };

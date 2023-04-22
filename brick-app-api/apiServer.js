@@ -3,7 +3,7 @@ const http = require('http');
 const cors = require('cors');
 const { getAllUsers, addUser } = require('./routes/Users');
 const { getConversationsForUser } = require('./routes/Conversations');
-const { getMessagesForConversation } = require('./routes/Messages');
+const { getMessagesForConversation, addMessageToConversation } = require('./routes/Messages');
 const { addSession } = require('./routes/Sessions');
 require('dotenv').config();
 
@@ -25,8 +25,6 @@ connection.connect(function (err) {
     cors()(req, res, function () {
       if (req.method === 'OPTIONS') {
         routeHandler.cors(req, res);
-      } else if (req.method === 'GET' && lowerUrl === '/getallusers') {
-        routeHandler.getAllUsersPath(req, res);
       } else if (req.method === 'POST' && lowerUrl === '/adduser') {
         routeHandler.addUserPath(req, res);
         // TODO: Find a better solution for this. This can be exploited
@@ -36,6 +34,8 @@ connection.connect(function (err) {
         routeHandler.getMessagesForConversationPath(req, res);
       } else if (req.method === 'POST' && lowerUrl === '/addsession') {
         routeHandler.addSessionPath(req, res);
+      } else if (req.method === 'POST' && lowerUrl === '/addmessagetoconversation') {
+        routeHandler.addMessageToConversationPath(req, res);
       } else {
         routeHandler.notFound(req, res);
       }
@@ -61,17 +61,6 @@ const routeHandler = {
     res.setHeader('Access-Control-Max-Age', '86400');
     res.statusCode = 200;
     res.end();
-  },
-  getAllUsersPath: function (req, res) {
-    getAllUsers(connection)
-      .then(resp => {
-        res.statusCode = 200;
-        res.end(JSON.stringify(resp));
-      }).catch(error => {
-        logToConsole(`Error getting users. Error: ${error}.`, req.method, req.url);
-        res.statusCode = 500;
-        res.end('Error fetching data from database');
-      });
   },
   addUserPath: function (req, res) {
     let body = '';
@@ -127,6 +116,24 @@ const routeHandler = {
         .then(resp => {
           res.statusCode = 200;
           res.end(JSON.stringify(resp));
+        }).catch(error => {
+          logToConsole(`Error getting session. Error: ${error}.`, req.method, req.url);
+          res.statusCode = 500;
+          res.end('Error fetching data from database');
+        });
+    });
+  },
+  addMessageToConversationPath: function (req, res) {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      const { userSessionId, conversationId, content, role } = JSON.parse(body);
+      addMessageToConversation(userSessionId, conversationId, content, role, connection)
+        .then(() => {
+          res.statusCode = 200;
+          res.end();
         }).catch(error => {
           logToConsole(`Error getting session. Error: ${error}.`, req.method, req.url);
           res.statusCode = 500;
