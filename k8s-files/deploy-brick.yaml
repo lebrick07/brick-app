@@ -18,11 +18,11 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-        - name: brick-app-api
-          image: zanylizard/brick-app-api
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 31002
+        # - name: brick-app-api
+        #   image: zanylizard/brick-app-api
+        #   imagePullPolicy: Always
+        #   ports:
+        #     - containerPort: 31002
       restartPolicy: Always
 
 ---
