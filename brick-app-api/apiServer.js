@@ -32,7 +32,7 @@ connection.connect(function (err) {
         // TODO: Find a better solution for this. This can be exploited
       } else if (req.method === 'GET' && lowerUrl.startsWith('/getconvoforusersession/') && lowerUrl.split('/').length === 3) {
         routeHandler.getConvoForUserSession(req, res);
-      } else if (req.method === 'GET' && lowerUrl.startsWith('/getmessagesforconversation/') && lowerUrl.split('/').length === 3) {
+      } else if (req.method === 'GET' && lowerUrl.startsWith('/getmessagesforconversation/') && lowerUrl.split('/').length === 4) {
         routeHandler.getMessagesForConversationPath(req, res);
       } else if (req.method === 'POST' && lowerUrl === '/addsession') {
         routeHandler.addSessionPath(req, res);
@@ -105,8 +105,9 @@ const routeHandler = {
   },
   getMessagesForConversationPath: function (req, res) {
     const conversationId = lowerUrl.split('/')[2];
+    const sessionId = lowerUrl.split('/')[3];
 
-    getMessagesForConversation(conversationId, connection)
+    getMessagesForConversation(sessionId, conversationId, connection)
       .then(resp => {
         res.end(JSON.stringify(resp));
       }).catch(error => {

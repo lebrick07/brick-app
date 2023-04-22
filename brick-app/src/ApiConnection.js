@@ -42,9 +42,9 @@ function getConversations(userSessionId) {
   });
 };
 
-function getMessages(conversationId) {
+function getMessages(userSessionId, conversationId) {
   return new Promise((resolve, reject) => {
-    fetch(`${apiUrl}/getMessagesForConversation/${conversationId}`)
+    fetch(`${apiUrl}/getMessagesForConversation/${conversationId}/${userSessionId}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
