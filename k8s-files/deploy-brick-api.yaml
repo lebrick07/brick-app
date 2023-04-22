@@ -17,7 +17,7 @@ spec:
           image: zanylizard/brick-app-api
           imagePullPolicy: Always
           ports:
-            - containerPort: 3001
+            - containerPort: 31002
       restartPolicy: Always
 
 ---
@@ -29,8 +29,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 3001
-      targetPort: 3001
+    - port: 31002
+      targetPort: 31002
       nodePort: 31002
       protocol: TCP
   selector:
