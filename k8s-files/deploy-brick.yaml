@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: brick-app
-          image: zanylizard/brick-app-all
+          image: zanylizard/brick-app
           imagePullPolicy: Always
           ports:
             - containerPort: 80
