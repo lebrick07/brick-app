@@ -96,6 +96,28 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.2)",
     textAlign: 'left',
   },
+  themedButton: {
+    backgroundColor: theme.palette.mode === "dark"
+      ? theme.palette.primary.dark
+      : theme.palette.primary.light,
+    color: theme.palette.mode === "dark"
+      ? theme.palette.primary.contrastText
+      : theme.palette.primary.main,
+    border: `1px solid ${
+      theme.palette.mode === "dark"
+        ? theme.palette.primary.main
+        : theme.palette.primary.dark
+    }`,
+    padding: '8px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    margin: '4px',
+    '&:hover': {
+      backgroundColor: theme.palette.mode === "dark"
+        ? theme.palette.primary.main
+        : theme.palette.primary.dark,
+    },
+  },
 }));
 
 function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
@@ -278,12 +300,27 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         )
       )}
       <div>
-        <button onClick={handleNewConversation}>New conversation</button>
-        <button onClick={handleGetConversations}>Get conversations</button>
+        <button
+          className={classes.themedButton}
+          onClick={handleNewConversation}
+        >
+          New conversation
+        </button>
+        <button
+          className={classes.themedButton}
+          onClick={handleGetConversations}
+        >
+          Get conversations
+        </button>
+        <br></br>
         {conversations.map((conversation, index) => (
-          <button key={index}
+          <button
+            key={index}
             onClick={() => handleGetConversationMessages(conversation, index)}
-            className={`${classes.conversationButton} ${currentConversation.index === index ? 'focused' : ''}`}>
+            className={`${classes.themedButton} ${
+              currentConversation.index === index ? 'focused' : ''
+            }`}
+          >
             {conversation.topic}
           </button>
         ))}
@@ -309,7 +346,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         </div>
       )}
     </div>
-  );
+  );  
 }
 
 function createNewMessage(message, isUser) {
