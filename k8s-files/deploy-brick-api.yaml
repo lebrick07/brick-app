@@ -1,0 +1,37 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: brick-app-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: brick-app-api
+  template:
+    metadata:
+      labels:
+        app: brick-app-api
+    spec:
+      containers:
+        - name: brick-app-api
+          image: zanylizard/brick-app-api
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 31002
+      restartPolicy: Always
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: brick-api-service
+spec:
+  type: NodePort
+  ports:
+    - port: 31002
+      targetPort: 31002
+      nodePort: 31002
+      protocol: TCP
+  selector:
+    app: brick-app-api

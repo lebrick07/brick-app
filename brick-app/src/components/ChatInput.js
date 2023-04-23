@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
+import { getConversations, getMessages, addMessageToConversation, addConversation, clearConversation } from '../ApiConnection';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -61,6 +62,22 @@ const useStyles = makeStyles((theme) => ({
   toggleHistoryButton: {
     marginTop: theme.spacing(1),
   },
+  clearConversationButton: {
+    marginTop: theme.spacing(1),
+  },
+  conversationButton: {
+    backgroundColor: 'white',
+    color: 'black',
+    border: '1px solid black',
+    padding: '8px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    margin: '4px',
+    '&.focused': {
+      backgroundColor: 'blue',
+      color: 'white',
+    },
+  },
   code: {
     backgroundColor: (theme) =>
       theme.palette && theme.palette.mode === "dark"
@@ -79,6 +96,19 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.2)",
     textAlign: 'left',
   },
+  themedButton: {
+    backgroundColor: 'rgba(106, 27, 154, 0.12)',
+    color: theme.palette.mode === 'dark' ? 'white' : 'rgba(106, 27, 154, 0.87)',
+    border: `1px solid rgba(106, 27, 154, 0.42)`,
+    padding: '8px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    margin: '4px',
+    '&.focused': {
+      backgroundColor: 'rgba(106, 27, 154, 0.5)',
+      color: 'white',
+    },
+  },  
 }));
 
 function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
@@ -86,10 +116,11 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const [response, setResponse] = useState('');
   const [error, setError] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
+  const [currentConversation, setCurrentConversation] = useState({ id: '', name: '', index: '' });
   const [showChatHistory, setShowChatHistory] = useState(false);
+  const [conversations, setConversations] = useState([]);
 
   const classes = useStyles();
-  // const chatHistoryRef = useRef(null);
 
   const isCode = (text) => {
     const codeIndicators = ['{', '}', ';', '(', ')', '=', '=>', 'function', 'const', 'let', 'var', 'import', 'export'];
@@ -100,13 +131,16 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Add your API key, model name, and API URL here.
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
     const modelName = process.env.REACT_APP_OPENAI_TEXT_MODEL;
     const apiUrl = process.env.REACT_APP_OPENAI_URL;
 
-    const historyPrompt = chatHistory.map((entry) => `User: ${entry.message}\n ${entry.response}`).join('\n\n');
-    const prompt = `${historyPrompt}\n\nUser: ${message}`;
+    const messages = [];
+    chatHistory.forEach((entry) => {
+      messages.push({ role: entry.role, content: entry.content });
+    });
+    messages.push(createNewMessage(message, true));
+
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -114,21 +148,49 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        prompt,
-        temperature: 0.5,
-        max_tokens: 2000,
         model: modelName,
+        messages: messages
       }),
     };
 
     try {
       const response = await fetch(apiUrl, requestOptions);
       const data = await response.json();
-      if (data.choices && data.choices.length > 0) {
-        const newResponse = data.choices[0].text;
+      if (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content) {
+        const newResponse = data.choices[0].message.content;
+        var userMessage = createNewMessage(message, true);
+        var assistantResponse = createNewMessage(newResponse, false);
+
+        // If session isn't found, it means that the user isn't logged in
+        const session = JSON.parse(localStorage.getItem('session'));
+        if (session && session.id !== '') {
+          // User is logged in and picked a conversation to continue
+          if (currentConversation.id !== '') {
+            await addMessageToConversation({ userSessionId: session.id, conversationId: currentConversation.id, content: userMessage.content, role: userMessage.role });
+            await addMessageToConversation({ userSessionId: session.id, conversationId: currentConversation.id, content: assistantResponse.content, role: assistantResponse.role });
+          } else {
+            // TODO: Generate from the Chat response
+            var convTopic = 'No topic yet';
+            await addConversation({ userSessionId: session.id, topic: convTopic })
+              .then(async (data) => {
+                await addMessageToConversation({ userSessionId: session.id, conversationId: data, content: userMessage.content, role: userMessage.role });
+                await addMessageToConversation({ userSessionId: session.id, conversationId: data, content: assistantResponse.content, role: assistantResponse.role });
+                setCurrentConversation(prevConversation => ({ ...prevConversation, id: data, name: convTopic }));
+                handleGetConversations();
+              }).catch((error) => {
+                console.error(error);
+              });
+          }
+        }
+
+        setChatHistory((prevHistory) => [
+          ...prevHistory,
+          userMessage,
+          assistantResponse
+        ]);
+
         setResponse(newResponse);
         setError('');
-        setChatHistory((prevHistory) => [...prevHistory, { message, response: newResponse }]);
       } else {
         setResponse('');
         setError('Sorry, no response was found.');
@@ -144,6 +206,60 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const toggleChatHistory = () => {
     setShowChatHistory((prevShow) => !prevShow);
   };
+
+  const handleGetConversations = () => {
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (session && session.id !== '') {
+      getConversations(session.id)
+        .then((data) => {
+          if (data.length > 0) {
+            setConversations(data);
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
+  const handleGetConversationMessages = (conversation, idx) => {
+    const session = JSON.parse(localStorage.getItem('session'));
+
+    if (session && session.id !== '' && conversation && conversation.id) {
+      getMessages(session.id, conversation.id)
+        .then((data) => {
+          setChatHistory(data);
+          setCurrentConversation(({ id: conversation.id, name: conversation.topic, index: idx }));
+
+          if (!showChatHistory) {
+            toggleChatHistory();
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
+    }
+  }
+
+  const handleClearConversation = (conversationId) => {
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (session && session.id !== '') {
+      clearConversation({ userSessionId: session.id, conversationId: conversationId })
+        .then(() => {
+          setConversations(prevConversations => {
+            return prevConversations.filter(conversation => conversation.id !== conversationId);
+          });
+
+          handleNewConversation();
+        }).catch((error) => {
+          console.error(error);
+        });
+    }
+  }
+
+  const handleNewConversation = () => {
+    setCurrentConversation({ id: '', name: '', index: '' });
+    setChatHistory([]);
+    setResponse('');
+  }
 
   return (
     <div className={classes.container}>
@@ -174,21 +290,60 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
           <p className={classes.responseBox}>{response}</p>
         )
       )}
+      <div>
+        <button
+          className={classes.themedButton}
+          onClick={handleNewConversation}
+        >
+          New conversation
+        </button>
+        <button
+          className={classes.themedButton}
+          onClick={handleGetConversations}
+        >
+          Get conversations
+        </button>
+        <br></br>
+        {conversations.map((conversation, index) => (
+          <button
+            key={index}
+            onClick={() => handleGetConversationMessages(conversation, index)}
+            className={`${classes.themedButton} ${
+              currentConversation.index === index ? 'focused' : ''
+            }`}
+          >
+            {conversation.topic}
+          </button>
+        ))}
+      </div>
       <Button className={classes.toggleHistoryButton} variant="outlined" size="small" onClick={toggleChatHistory}>
         {showChatHistory ? 'Hide chat history' : 'Show chat history'}
       </Button>
       {showChatHistory && (
         <div className={classes.chatHistory}>
+          <h1>Topic: {currentConversation.name}</h1>
           {chatHistory.map((entry, index) => (
             <div key={index} className={classes.chatHistoryEntry}>
-              <p>User: {entry.message}</p>
-              <p>Bot: {entry.response}</p>
+              <p>{entry.role.charAt(0).toUpperCase() + entry.role.slice(1)}: {entry.content}</p>
             </div>
           ))}
         </div>
       )}
+      {conversations.length > 0 && currentConversation.id !== '' && (
+        <div>
+          <Button className={classes.clearConversationButton} variant="outlined" size="small" onClick={() => handleClearConversation(currentConversation.id)}>
+            Clear conversation
+          </Button>
+        </div>
+      )}
     </div>
-  );
+  );  
+}
+
+function createNewMessage(message, isUser) {
+  return isUser ?
+    { role: "user", content: message } :
+    { role: "assistant", content: message }
 }
 
 export default ChatInput;

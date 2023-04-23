@@ -48,8 +48,38 @@ variable "lb_name" {
     description = "ALB name"
 }
 
-variable "lb_ssl_arn" {
-    default = "arn:aws:acm:us-east-1:216026633254:certificate/3b239dcb-0906-41ca-b477-9a912c60cb98"
-    description = "SSL ARN"
+variable "db_name" {
+    default = "brickdb"
+    description = "DB name"
 }
+
+variable "db_version" {
+    default = 5.7
+    description = "DB version"
+}
+
+variable "db_instance_class" {
+    default = "db.t3.micro"
+    description = "DB class"
+}
+
+variable "db_username" {
+    default = "brickuser"
+    description = "DB Username"
+}
+
+variable "db_password" {
+    default = ""
+    description = "DB Password"
+}
+
+variable "db_pg_name" {
+    default = "default.mysql5.7"
+    description = "DB paramater group name"
+}
+
+
+
+
+
 

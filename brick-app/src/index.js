@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import CryptoDonations from './components/CryptoDonations';
-import GoogleLoginButton, { useGoogleLogin } from './components/GoogleLoginButton';
+import GoogleLoginButton, { isGoogleLoggedIn } from './components/GoogleLoginButton';
 import About from './components/pages/About';
 import Contact from './components/pages/Contact';
 import Settings from './components/pages/Settings';
@@ -76,7 +76,7 @@ const lightTheme = createTheme({
 });
 
 function MainApp() {
-  const isLoggedIn = useGoogleLogin();
+  const isLoggedIn = isGoogleLoggedIn();
   const [currentTheme, setCurrentTheme] = useState(() => {
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme) {
@@ -112,8 +112,7 @@ function MainApp() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Welcome to Brickbot,{' '}
-              {localStorage.getItem('loggedUser') ? localStorage.getItem('loggedUser') : 'explorer'}
+              Welcome to Brickbot, {getUsername()}
             </Typography>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Button color="inherit" href="/">
@@ -176,6 +175,8 @@ function MainApp() {
           </Routes>
         </Box>
         <footer>
+          <div>
+          </div>
           <div className="container">
             <div className="footer-container">
               <div className="footer-center" style={{ textAlign: 'center' }}>
@@ -200,5 +201,16 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <MainApp />
 );
+
+function getUsername() {
+  const session = JSON.parse(localStorage.getItem('session'));
+  if (session && session.userName !== '') {
+    return session.userName;
+  }
+
+  return (session && session.userName !== '') ?
+    session.userName :
+    'Explorer';
+}
 
 reportWebVitals();
