@@ -235,13 +235,17 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
             return prevConversations.filter(conversation => conversation.id !== conversationId);
           });
 
-          setChatHistory([]);
-          setResponse('');
-          setCurrentConversation({ id: '', name: '', index: '' });
+          handleNewConversation();
         }).catch((error) => {
           console.error(error);
         });
     }
+  }
+
+  const handleNewConversation = () => {
+    setCurrentConversation({ id: '', name: '', index: '' });
+    setChatHistory([]);
+    setResponse('');
   }
 
   return (
@@ -274,6 +278,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         )
       )}
       <div>
+        <button onClick={handleNewConversation}>New conversation</button>
         <button onClick={handleGetConversations}>Get conversations</button>
         {conversations.map((conversation, index) => (
           <button key={index}
