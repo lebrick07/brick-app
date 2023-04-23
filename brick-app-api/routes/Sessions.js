@@ -1,5 +1,10 @@
 function addSession(sessionId, expires, data, connection) {
     return new Promise((resolve, reject) => {
+        if (!sessionId) {
+            reject(`SessionId cannot be NULL`);
+            return;
+        }
+
         connection.query('SELECT session_id, expires, data FROM Sessions WHERE session_id = ?', [sessionId], function (err, results) {
             if (err) {
                 reject(err);
@@ -11,7 +16,7 @@ function addSession(sessionId, expires, data, connection) {
                 // Session not expired
                 if (results[0].expires >= Date.now()) {
                     resolve(results[0]);
-                    return; ß
+                    return;
                 }
 
                 // Is it expired? Update its "expire" field
@@ -19,13 +24,14 @@ function addSession(sessionId, expires, data, connection) {
                     function (err, results) {
                         if (err) {
                             reject(err);
-                        } else {
-                            resolve({
-                                sessionId: results.session_id,
-                                expires: expires,
-                                data: data
-                            });
+                            return;
                         }
+
+                        resolve({
+                            sessionId: results.session_id,
+                            expires: expires,
+                            data: data
+                        });
                     }
                 );
                 // Session not found. Create one
@@ -35,13 +41,14 @@ function addSession(sessionId, expires, data, connection) {
                     function (err, results) {
                         if (err) {
                             reject(err);
-                        } else {
-                            resolve({
-                                sessionId: results.session_id,
-                                expires: expires,
-                                data: data
-                            });
+                            return;
                         }
+                        
+                        resolve({
+                            sessionId: results.session_id,
+                            expires: expires,
+                            data: data
+                        });
                     }
                 );
             }

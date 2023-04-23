@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import { getConversations, getMessages, addMessageToConversation, addConversation } from '../ApiConnection';
+import { getConversations, getMessages, addMessageToConversation, addConversation, clearConversation } from '../ApiConnection';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -60,6 +60,9 @@ const useStyles = makeStyles((theme) => ({
     color: 'red',
   },
   toggleHistoryButton: {
+    marginTop: theme.spacing(1),
+  },
+  clearConversationButton: {
     marginTop: theme.spacing(1),
   },
   code: {
@@ -208,6 +211,24 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
     }
   }
 
+  const handleClearConversation = (conversationId) => {
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (session && session.id !== '') {
+      clearConversation({ userSessionId: session.id, conversationId: conversationId })
+        .then(() => {
+          setConversations(prevConversations => {
+            return prevConversations.filter(conversation => conversation.id !== conversationId);
+          });
+
+          setChatHistory([]);
+          setResponse('');
+          setCurrentConversation({ id: '', name: '' });
+        }).catch((error) => {
+          console.error(error);
+        });
+    }
+  }
+
   return (
     <div className={classes.container}>
       <form onSubmit={handleSubmit}>
@@ -256,6 +277,13 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
               <p>{entry.role.charAt(0).toUpperCase() + entry.role.slice(1)}: {entry.content}</p>
             </div>
           ))}
+        </div>
+      )}
+      {conversations.length > 0 && currentConversation.id !== '' && (
+        <div>
+          <Button className={classes.clearConversationButton} variant="outlined" size="small" onClick={() => handleClearConversation(currentConversation.id)}>
+            Clear conversation
+          </Button>
         </div>
       )}
     </div>

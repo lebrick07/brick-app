@@ -134,4 +134,26 @@ function getRequestOptions(body) {
   };
 }
 
-export { addOrGetUser, getConversations, getMessages, addOrGetSession, addMessageToConversation, addConversation };
+function clearConversation({ userSessionId, conversationId }) {
+  return new Promise((resolve, reject) => {
+    const requestOptions = getRequestOptions({ userSessionId, conversationId });
+
+    fetch(apiUrl + '/clearConversation', requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          reject(data.error);
+        } else {
+          resolve(data);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        console.log('Error adding/retrieving user');
+        reject(error);
+      });
+  });
+}
+
+export { addOrGetUser, getConversations, getMessages, addOrGetSession, addMessageToConversation, addConversation, clearConversation };
