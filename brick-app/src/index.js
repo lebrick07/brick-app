@@ -112,8 +112,7 @@ function MainApp() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Welcome to Brickbot,{' '}
-              {localStorage.getItem('loggedUser') ? localStorage.getItem('loggedUser') : 'explorer'}
+              Welcome to Brickbot, {getUsername()}
             </Typography>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Button color="inherit" href="/">
@@ -202,5 +201,16 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <MainApp />
 );
+
+function getUsername() {
+  const session = JSON.parse(localStorage.getItem('session'));
+  if (session && session.userName !== '') {
+    return session.userName;
+  }
+
+  return (session && session.userName !== '') ?
+    session.userName :
+    'Explorer';
+}
 
 reportWebVitals();
