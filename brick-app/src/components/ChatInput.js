@@ -97,27 +97,18 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
   },
   themedButton: {
-    backgroundColor: theme.palette.mode === "dark"
-      ? theme.palette.primary.dark
-      : theme.palette.primary.light,
-    color: theme.palette.mode === "dark"
-      ? theme.palette.primary.contrastText
-      : theme.palette.primary.main,
-    border: `1px solid ${
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.primary.dark
-    }`,
+    backgroundColor: 'rgba(106, 27, 154, 0.12)',
+    color: theme.palette.mode === 'dark' ? 'white' : 'rgba(106, 27, 154, 0.87)',
+    border: `1px solid rgba(106, 27, 154, 0.42)`,
     padding: '8px',
     borderRadius: '4px',
     cursor: 'pointer',
     margin: '4px',
-    '&:hover': {
-      backgroundColor: theme.palette.mode === "dark"
-        ? theme.palette.primary.main
-        : theme.palette.primary.dark,
+    '&.focused': {
+      backgroundColor: 'rgba(106, 27, 154, 0.5)',
+      color: 'white',
     },
-  },
+  },  
 }));
 
 function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
