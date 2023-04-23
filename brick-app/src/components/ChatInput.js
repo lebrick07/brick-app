@@ -65,6 +65,19 @@ const useStyles = makeStyles((theme) => ({
   clearConversationButton: {
     marginTop: theme.spacing(1),
   },
+  conversationButton: {
+    backgroundColor: 'white',
+    color: 'black',
+    border: '1px solid black',
+    padding: '8px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    margin: '4px',
+    '&.focused': {
+      backgroundColor: 'blue',
+      color: 'white',
+    },
+  },
   code: {
     backgroundColor: (theme) =>
       theme.palette && theme.palette.mode === "dark"
@@ -90,7 +103,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const [response, setResponse] = useState('');
   const [error, setError] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
-  const [currentConversation, setCurrentConversation] = useState({ id: '', name: '' });
+  const [currentConversation, setCurrentConversation] = useState({ id: '', name: '', index: '' });
   const [showChatHistory, setShowChatHistory] = useState(false);
   const [conversations, setConversations] = useState([]);
 
@@ -149,7 +162,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
               .then(async (data) => {
                 await addMessageToConversation({ userSessionId: session.id, conversationId: data, content: userMessage.content, role: userMessage.role });
                 await addMessageToConversation({ userSessionId: session.id, conversationId: data, content: assistantResponse.content, role: assistantResponse.role });
-                setCurrentConversation({ id: data, name: convTopic });
+                setCurrentConversation(prevConversation => ({ ...prevConversation, id: data, name: convTopic }));
                 handleGetConversations();
               }).catch((error) => {
                 console.error(error);
@@ -186,21 +199,23 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
     if (session && session.id !== '') {
       getConversations(session.id)
         .then((data) => {
-          setConversations(data);
+          if (data.length > 0) {
+            setConversations(data);
+          }
         }).catch((error) => {
           console.error(error);
         });
     }
   };
 
-  const handleGetConversationMessages = (conversation) => {
+  const handleGetConversationMessages = (conversation, idx) => {
     const session = JSON.parse(localStorage.getItem('session'));
 
     if (session && session.id !== '' && conversation && conversation.id) {
       getMessages(session.id, conversation.id)
         .then((data) => {
           setChatHistory(data);
-          setCurrentConversation({ id: conversation.id, name: conversation.topic });
+          setCurrentConversation(({ id: conversation.id, name: conversation.topic, index: idx }));
 
           if (!showChatHistory) {
             toggleChatHistory();
@@ -222,7 +237,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
 
           setChatHistory([]);
           setResponse('');
-          setCurrentConversation({ id: '', name: '' });
+          setCurrentConversation({ id: '', name: '', index: '' });
         }).catch((error) => {
           console.error(error);
         });
@@ -261,7 +276,9 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
       <div>
         <button onClick={handleGetConversations}>Get conversations</button>
         {conversations.map((conversation, index) => (
-          <button key={index} onClick={() => handleGetConversationMessages(conversation)}>
+          <button key={index}
+            onClick={() => handleGetConversationMessages(conversation, index)}
+            className={`${classes.conversationButton} ${currentConversation.index === index ? 'focused' : ''}`}>
             {conversation.topic}
           </button>
         ))}

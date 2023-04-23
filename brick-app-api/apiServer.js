@@ -49,6 +49,13 @@ connection.connect(function (err) {
   server.listen(process.env.API_PORT, function () {
     console.log(`Server listening on port ${process.env.API_PORT}`);
   });
+
+  process.on('exit', function () {
+    connection.end(function (err) {
+      if (err) throw err;
+      console.log('MySQL connection closed.');
+    });
+  });
 });
 
 function logToConsole(message, method, url) {
