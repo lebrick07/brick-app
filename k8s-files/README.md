@@ -13,6 +13,7 @@ kubectl delete -f deploy-brick.yaml
 ```
 kubectl apply -f deploy-brick-api.yaml
 ```
+```
 ### Delete
 ```
 kubectl delete -f deploy-brick-api.yaml
