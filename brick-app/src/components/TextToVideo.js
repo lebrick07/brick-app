@@ -1,36 +1,10 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import MovieCreationIcon from '@mui/icons-material/MovieCreation';
 import ReactPlayer from 'react-player';
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(2),
-    height: 'calc(100% - 150px)',
-    marginTop: theme.spacing(2),
-    overflow: 'hidden',
-  },
-  input: {
-    flexGrow: 1,
-    marginBottom: theme.spacing(1),
-  },
-  errorMessage: {
-    color: 'red',
-  },
-  videoPlayerWrapper: {
-    marginTop: theme.spacing(2),
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: '10px',
-    padding: theme.spacing(2),
-    maxHeight: '300px',
-    overflowY: 'scroll',
-  },
-}));
+import { useStyles } from '../css/components/TextToVideo';
 
 function TextToVideo() {
   const [inputText, setInputText] = useState('');
@@ -54,7 +28,7 @@ function TextToVideo() {
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
     const modelName = process.env.REACT_APP_OPENAI_TEXT_MODEL;
     const apiUrl = process.env.REACT_APP_OPENAI_URL;
-  
+
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -68,7 +42,7 @@ function TextToVideo() {
         model: modelName,
       }),
     };
-  
+
     try {
       const response = await fetch(apiUrl, requestOptions);
       const data = await response.json();
@@ -82,11 +56,11 @@ function TextToVideo() {
       throw error;
     }
   };
-  
+
   const callVideoGenerationService = async (generatedText) => {
     const videoGenerationApiKey = process.env.REACT_APP_VIDEO_GENERATION_API_KEY;
     const videoGenerationApiUrl = process.env.REACT_APP_VIDEO_GENERATION_API_URL;
-  
+
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -97,13 +71,13 @@ function TextToVideo() {
         text: generatedText,
       }),
     };
-  
+
     try {
       const response = await fetch(videoGenerationApiUrl, requestOptions);
-  
+
       if (response.headers.get('Content-Type').includes('application/json')) {
         const data = await response.json();
-  
+
         if (data.videoUrl) {
           return data.videoUrl;
         } else {
@@ -118,8 +92,8 @@ function TextToVideo() {
       throw error;
     }
   };
-  
-  
+
+
 
   return (
     <div className={classes.container}>
