@@ -9,71 +9,9 @@ import Contact from './components/pages/Contact';
 import Settings from './components/pages/Settings';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { CssBaseline, Switch, AppBar, Toolbar, IconButton, Typography, Button, Box, Drawer, List, ListItem, ListItemText, } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { purple, grey } from '@mui/material/colors';
+import { ThemeProvider } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: purple[500],
-    },
-    background: {
-      default: grey[900],
-      paper: grey[800],
-    },
-    text: {
-      primary: grey[50],
-    },
-  },
-  components: {
-    MuiListItem: {
-      defaultProps: {
-        color: 'primary',
-      },
-      styleOverrides: {
-        root: {
-          color: grey[50],
-          '&:hover': {
-            color: purple[300],
-          },
-        },
-      },
-    },
-  },
-});
-
-const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: purple[500],
-    },
-    background: {
-      default: grey[50],
-      paper: grey[100],
-    },
-    text: {
-      primary: grey[900],
-    },
-  },
-  components: {
-    MuiListItem: {
-      defaultProps: {
-        color: 'primary',
-      },
-      styleOverrides: {
-        root: {
-          color: grey[900],
-          '&:hover': {
-            color: purple[500],
-          },
-        },
-      },
-    },
-  },
-});
+import { lightTheme, darkTheme } from './css/index';
 
 function MainApp() {
   const isLoggedIn = isGoogleLoggedIn();

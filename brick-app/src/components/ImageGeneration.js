@@ -1,35 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { makeStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { useStyles } from '../css/components/ImageGeneration';
 
 const apiEndpoint = process.env.REACT_APP_OPENAI_IMAGE_API_URL;
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: theme.spacing(2),
-    // backgroundColor: theme.palette.background.paper,
-    height: 'calc(100% - 150px)',
-    borderRadius: '10px',
-    marginTop: theme.spacing(2),
-  },
-  input: {
-    marginBottom: theme.spacing(1),
-  },
-  errorMessage: {
-    color: 'red',
-  },
-  generatedImage: {
-    maxWidth: '100%',
-    height: 'auto',
-    borderRadius: '10px',
-    marginTop: theme.spacing(1),
-  },
-}));
 
 const ImageGeneration = () => {
   const [generatedImage, setGeneratedImage] = useState(null);
