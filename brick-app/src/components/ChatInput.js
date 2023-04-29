@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import { getConversations, getMessages, addMessageToConversation, addConversation, clearConversation } from '../ApiConnection';
 import { useStyles } from '../css/components/ChatInput';
 import '../css/components/Loading.css';
-//User: Could you give a topic to our conversation so far, in 3 to 5 words?
 
 function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const [message, setMessage] = useState('');
@@ -25,14 +24,17 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
     setIsLoading(true);
     event.preventDefault();
 
-    const apiUrl = process.env.REACT_APP_OPENAI_URL;
-    const requestOptions = initRequest(chatHistory, message);
+    const messages = [];
+    chatHistory.forEach((entry) => {
+      messages.push({ role: entry.role, content: entry.content });
+    });
+    messages.push(createNewMessage(message, true));
 
     try {
-      const response = await fetch(apiUrl, requestOptions);
-      const data = await response.json();
+      var data = await executeRequest(messages);
+
       if (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content) {
-        const newResponse = data.choices[0].message.content;
+        var newResponse = data.choices[0].message.content;
         var userMessage = createNewMessage(message, true);
         var assistantResponse = createNewMessage(newResponse, false);
 
@@ -44,8 +46,12 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
             await addMessageToConversation({ userSessionId: session.id, conversationId: currentConversation.id, content: userMessage.content, role: userMessage.role });
             await addMessageToConversation({ userSessionId: session.id, conversationId: currentConversation.id, content: assistantResponse.content, role: assistantResponse.role });
           } else {
-            // TODO: Generate from the Chat response
-            var convTopic = 'No topic yet';
+            messages.push(createNewMessage('Could you give a topic to our conversation so far, in 3 to 5 words?', true));
+            data = await executeRequest(messages);
+
+            var convTopic = (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content) ?
+              data.choices[0].message.content.replace(/"/g, '') : 'Conversation with no topic';
+
             await addConversation({ userSessionId: session.id, topic: convTopic })
               .then(async (data) => {
                 await addMessageToConversation({ userSessionId: session.id, conversationId: data, content: userMessage.content, role: userMessage.role });
@@ -133,7 +139,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         }).catch((error) => {
           console.error(error);
         });
-        setIsLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -239,15 +245,10 @@ function createNewMessage(message, isUser) {
     { role: "assistant", content: message }
 }
 
-function initRequest(chatHistory, message) {
+async function executeRequest(messages) {
+  const apiUrl = process.env.REACT_APP_OPENAI_URL;
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
   const modelName = process.env.REACT_APP_OPENAI_TEXT_MODEL;
-
-  const messages = [];
-  chatHistory.forEach((entry) => {
-    messages.push({ role: entry.role, content: entry.content });
-  });
-  messages.push(createNewMessage(message, true));
 
   const requestOptions = {
     method: 'POST',
@@ -261,7 +262,8 @@ function initRequest(chatHistory, message) {
     }),
   };
 
-  return requestOptions;
+  const response = await fetch(apiUrl, requestOptions);
+  return await response.json();
 }
 
 export default ChatInput;
