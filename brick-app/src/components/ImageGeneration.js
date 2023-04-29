@@ -3,6 +3,7 @@ import axios from "axios";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useStyles } from '../css/components/ImageGeneration';
+import '../css/components/Loading.css';
 
 const apiEndpoint = process.env.REACT_APP_OPENAI_IMAGE_API_URL;
 
@@ -54,17 +55,23 @@ const ImageGeneration = () => {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
-      <TextField
-        className={classes.input}
-        label="Enter your prompt here"
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        onKeyDown={handleKeyDown}
-      />
-      {errorMessage && <p className={classes.errorMessage}>Error: {errorMessage}</p>}
-      <Button type="submit" variant="contained" onClick={generateImage} disabled={loading}>Generate Image</Button>
-      {generatedImage && <img src={generatedImage} alt="Generated" className={classes.generatedImage} />}
+    <div>
+      {loading ? (
+        <div className="spinner"></div>
+      ) : (
+        <div className={classes.container}>
+          <TextField
+            className={classes.input}
+            label="Enter your prompt here"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          {errorMessage && <p className={classes.errorMessage}>Error: {errorMessage}</p>}
+          <Button type="submit" variant="contained" onClick={generateImage} disabled={loading}>Generate Image</Button>
+          {generatedImage && <img src={generatedImage} alt="Generated" className={classes.generatedImage} />}
+        </div>
+      )}
     </div>
   );
 };
