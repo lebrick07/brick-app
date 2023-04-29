@@ -6,6 +6,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import { getConversations, getMessages, addMessageToConversation, addConversation, clearConversation } from '../ApiConnection';
 import { useStyles } from '../css/components/ChatInput';
+import '../css/components/Loading.css';
+//User: Could you give a topic to our conversation so far, in 3 to 5 words?
 
 function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const [message, setMessage] = useState('');
@@ -15,33 +17,16 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const [currentConversation, setCurrentConversation] = useState({ id: '', name: '', index: '' });
   const [showChatHistory, setShowChatHistory] = useState(false);
   const [conversations, setConversations] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const classes = useStyles();
 
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     event.preventDefault();
 
-    const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-    const modelName = process.env.REACT_APP_OPENAI_TEXT_MODEL;
     const apiUrl = process.env.REACT_APP_OPENAI_URL;
-
-    const messages = [];
-    chatHistory.forEach((entry) => {
-      messages.push({ role: entry.role, content: entry.content });
-    });
-    messages.push(createNewMessage(message, true));
-
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: modelName,
-        messages: messages
-      }),
-    };
+    const requestOptions = initRequest(chatHistory, message);
 
     try {
       const response = await fetch(apiUrl, requestOptions);
@@ -91,6 +76,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
     }
 
     setMessage('');
+    setIsLoading(false);
   };
 
   const toggleChatHistory = () => {
@@ -100,6 +86,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   const handleGetConversations = () => {
     const session = JSON.parse(localStorage.getItem('session'));
     if (session && session.id !== '') {
+      setIsLoading(true);
       getConversations(session.id)
         .then((data) => {
           if (data.length > 0) {
@@ -108,10 +95,12 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         }).catch((error) => {
           console.error(error);
         });
+      setIsLoading(false);
     }
   };
 
   const handleGetConversationMessages = (conversation, idx) => {
+    setIsLoading(true);
     const session = JSON.parse(localStorage.getItem('session'));
 
     if (session && session.id !== '' && conversation && conversation.id) {
@@ -127,11 +116,13 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
           console.error(error);
         });
     }
+    setIsLoading(false);
   }
 
   const handleClearConversation = (conversationId) => {
     const session = JSON.parse(localStorage.getItem('session'));
     if (session && session.id !== '') {
+      setIsLoading(true);
       clearConversation({ userSessionId: session.id, conversationId: conversationId })
         .then(() => {
           setConversations(prevConversations => {
@@ -142,6 +133,7 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
         }).catch((error) => {
           console.error(error);
         });
+        setIsLoading(false);
     }
   }
 
@@ -152,83 +144,89 @@ function ChatInput({ onNewMessage, onTriggerImageGeneration }) {
   }
 
   return (
-    <div className={classes.container}>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          className={classes.input}
-          label="Enter your message here"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton type="submit">
-                  <SendIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </form>
-      {error && <p className={classes.errorMessage}>Error: {error}</p>}
-      {response && (<p className={classes.responseBox}>{response}</p>)}
-      <div>
-        <button
-          className={classes.themedButton}
-          onClick={handleNewConversation}
-        >
-          New conversation
-        </button>
-        <button
-          className={classes.themedButton}
-          onClick={handleGetConversations}
-        >
-          Get conversations
-        </button>
-        <br></br>
-        {conversations.map((conversation, index) => (
-          <button
-            key={index}
-            onClick={() => handleGetConversationMessages(conversation, index)}
-            className={`${classes.themedButton} ${currentConversation.index === index ? 'focused' : ''
-              }`}
-          >
-            {conversation.topic}
-          </button>
-        ))}
-      </div>
-      <Button className={classes.toggleHistoryButton} variant="outlined" size="small" onClick={toggleChatHistory}>
-        {showChatHistory ? 'Hide chat history' : 'Show chat history'}
-      </Button>
-      {showChatHistory && (
-        <div className={classes.chatHistory}>
-          <h1>Topic: {currentConversation.name}</h1>
-          {chatHistory.map((entry, index) => {
-            const splitContent = entry.content.split('```');
-            return (
-              <div key={index} className={classes.chatHistoryEntry}>
-                {entry.role.charAt(0).toUpperCase() + entry.role.slice(1)}:{' '}
-                {splitContent.map((text, i) => {
-                  if (i % 2 === 1) {
-                    return (
-                      <p key={i} className={classes.codeBlock}>
-                        {text}
-                      </p>
-                    );
-                  } else {
-                    return text;
-                  }
-                })}
-              </div>
-            );
-          })}
-        </div>
-      )}
-      {conversations.length > 0 && currentConversation.id !== '' && (
-        <div>
-          <Button className={classes.clearConversationButton} variant="outlined" size="small" onClick={() => handleClearConversation(currentConversation.id)}>
-            Clear conversation
+    <div>
+      {isLoading ? (
+        <div className="spinner"></div>
+      ) : (
+        <div className={classes.container}>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              className={classes.input}
+              label="Enter your message here"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton type="submit">
+                      <SendIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </form>
+          {error && <p className={classes.errorMessage}>Error: {error}</p>}
+          {response && (<p className={classes.responseBox}>{response}</p>)}
+          <div>
+            <button
+              className={classes.themedButton}
+              onClick={handleNewConversation}
+            >
+              New conversation
+            </button>
+            <button
+              className={classes.themedButton}
+              onClick={handleGetConversations}
+            >
+              Get conversations
+            </button>
+            <br></br>
+            {conversations.map((conversation, index) => (
+              <button
+                key={index}
+                onClick={() => handleGetConversationMessages(conversation, index)}
+                className={`${classes.themedButton} ${currentConversation.index === index ? 'focused' : ''
+                  }`}
+              >
+                {conversation.topic}
+              </button>
+            ))}
+          </div>
+          <Button className={classes.toggleHistoryButton} variant="outlined" size="small" onClick={toggleChatHistory}>
+            {showChatHistory ? 'Hide chat history' : 'Show chat history'}
           </Button>
+          {showChatHistory && (
+            <div className={classes.chatHistory}>
+              <h1>Topic: {currentConversation.name}</h1>
+              {chatHistory.map((entry, index) => {
+                const splitContent = entry.content.split('```');
+                return (
+                  <div key={index} className={classes.chatHistoryEntry}>
+                    {entry.role.charAt(0).toUpperCase() + entry.role.slice(1)}:{' '}
+                    {splitContent.map((text, i) => {
+                      if (i % 2 === 1) {
+                        return (
+                          <p key={i} className={classes.codeBlock}>
+                            {text}
+                          </p>
+                        );
+                      } else {
+                        return text;
+                      }
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {conversations.length > 0 && currentConversation.id !== '' && (
+            <div>
+              <Button className={classes.clearConversationButton} variant="outlined" size="small" onClick={() => handleClearConversation(currentConversation.id)}>
+                Clear conversation
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -239,6 +237,31 @@ function createNewMessage(message, isUser) {
   return isUser ?
     { role: "user", content: message } :
     { role: "assistant", content: message }
+}
+
+function initRequest(chatHistory, message) {
+  const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+  const modelName = process.env.REACT_APP_OPENAI_TEXT_MODEL;
+
+  const messages = [];
+  chatHistory.forEach((entry) => {
+    messages.push({ role: entry.role, content: entry.content });
+  });
+  messages.push(createNewMessage(message, true));
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: modelName,
+      messages: messages
+    }),
+  };
+
+  return requestOptions;
 }
 
 export default ChatInput;
