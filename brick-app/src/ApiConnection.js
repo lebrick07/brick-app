@@ -104,9 +104,9 @@ function addConversation({ userSessionId, topic }) {
   });
 }
 
-function addOrGetSession({ id, expires, data }) {
+function addOrGetSession({ id, data }) {
   return new Promise((resolve, reject) => {
-    const requestOptions = getRequestOptions({ id, expires, data });
+    const requestOptions = getRequestOptions({ id, data });
 
     fetch(apiUrl + '/addSession', requestOptions)
       .then((response) => response.json())

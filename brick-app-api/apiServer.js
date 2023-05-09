@@ -123,8 +123,8 @@ const routeHandler = {
       body += chunk.toString();
     });
     req.on('end', () => {
-      const { id, expires, data } = JSON.parse(body);
-      addSession(id, expires, data, connection)
+      const { id, data } = JSON.parse(body);
+      addSession(id, data, connection)
         .then(resp => {
           res.statusCode = 200;
           res.end(JSON.stringify(resp));
