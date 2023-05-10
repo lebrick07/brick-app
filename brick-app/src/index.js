@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import CryptoDonations from './components/CryptoDonations';
@@ -12,7 +12,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { lightTheme, darkTheme } from './css/index';
 import { useAuth0 } from "@auth0/auth0-react";
 import ReactDOM from 'react-dom/client';
-import { LoginButton, LogoutButton, AuthProvider } from './components/LoginButton';
+import { LoginButton, LogoutButton, AuthProvider, OnSuccess } from './components/LoginButton';
 
 function MainApp() {
   const { isAuthenticated, user } = useAuth0();
@@ -30,6 +30,12 @@ function MainApp() {
     setCurrentTheme(newTheme);
     localStorage.setItem('theme', newTheme === darkTheme ? "dark" : "light");
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      OnSuccess(user);
+    }
+  }, [isAuthenticated, user]);
 
   const [isNavOpen, setIsNavOpen] = useState(false);
   const handleNavOpen = () => { setIsNavOpen(true); };

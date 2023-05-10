@@ -1,4 +1,4 @@
-function addSession(sessionId, expires, data, connection) {
+function addSession(sessionId, data, connection) {
     return new Promise((resolve, reject) => {
         if (!sessionId) {
             reject(`SessionId cannot be NULL`);
@@ -18,8 +18,8 @@ function addSession(sessionId, expires, data, connection) {
 
                 // Session not found. Create one
             } else {
-                connection.query('INSERT INTO Sessions (session_id, expires, data) VALUES (?, ?, ?)',
-                    [sessionId, expires, data],
+                connection.query('INSERT INTO Sessions (session_id, data) VALUES (?, ?)',
+                    [sessionId, data],
                     function (err, results) {
                         if (err) {
                             reject(err);
@@ -28,7 +28,6 @@ function addSession(sessionId, expires, data, connection) {
 
                         resolve({
                             sessionId: results.session_id,
-                            expires: expires,
                             data: data
                         });
                     }

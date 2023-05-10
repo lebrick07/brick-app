@@ -79,8 +79,8 @@ const routeHandler = {
       body += chunk.toString();
     });
     req.on('end', () => {
-      const { name, email, is_email_verified } = JSON.parse(body);
-      addUser(name, email, is_email_verified, connection)
+      const { name, email, isEmailVerified } = JSON.parse(body);
+      addUser(name, email, isEmailVerified, connection)
         .then(user => {
           res.end(JSON.stringify(user));
         })
