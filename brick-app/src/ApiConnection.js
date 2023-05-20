@@ -1,4 +1,9 @@
-const apiUrl = process.env.REACT_APP_API_IP_ADDRESS + ':' + process.env.REACT_APP_API_PORT;
+// const apiUrl = process.env.REACT_APP_API_IP_ADDRESS + ':' + process.env.REACT_APP_API_PORT;
+
+const apiUrl = process.env.NODE_ENV === 'development' 
+  ? `http://localhost:${process.env.REACT_APP_API_PORT}`
+  : `${process.env.REACT_APP_API_IP_ADDRESS}:${process.env.REACT_APP_API_PORT}`;
+
 
 function addOrGetUser({ name, email, isEmailVerified }) {
   return new Promise((resolve, reject) => {
