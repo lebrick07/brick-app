@@ -3,9 +3,14 @@
 //     description = "Ubuntu AMI"
 // }
 
+// variable "ami_id" {
+//     default = "ami-0557a15b87f6559cf"
+//     description = "Ubuntu AMI"
+// }
+
 variable "ami_id" {
-    default = "ami-0557a15b87f6559cf"
-    description = "Ubuntu AMI"
+    default = "ami-0030830e3cf28bd80"
+    description = "Ubuntu AMI (lastest)"
 }
 
 variable "ssh_key" {

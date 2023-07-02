@@ -201,16 +201,16 @@ resource "aws_route53_record" "brick_r53_record" {
   }
 }
 
-resource "aws_db_instance" "default" {
-  allocated_storage    = 10
-  db_name              = var.db_name
-  engine               = "mysql"
-  engine_version       = var.db_version
-  instance_class       = var.db_instance_class
-  username             = var.db_username
-  password             = var.db_password
-  parameter_group_name = var.db_pg_name
-  skip_final_snapshot  = true
-  publicly_accessible  = true
-  vpc_security_group_ids = [aws_security_group.brick_db_sg.id]
-}
+// resource "aws_db_instance" "default" {
+//   allocated_storage    = 10
+//   db_name              = var.db_name
+//   engine               = "mysql"
+//   engine_version       = var.db_version
+//   instance_class       = var.db_instance_class
+//   username             = var.db_username
+//   password             = var.db_password
+//   parameter_group_name = var.db_pg_name
+//   skip_final_snapshot  = true
+//   publicly_accessible  = true
+//   vpc_security_group_ids = [aws_security_group.brick_db_sg.id]
+// }
